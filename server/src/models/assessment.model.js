@@ -17,3 +17,5 @@ const assessmentSchema = new Schema({
         type : mongoose.Schema.Types.Mixed
     }
 },{timestamps:true});
+
+export const Assessment = mongoose.model('Assessment',assessmentSchema);
