@@ -1,16 +1,24 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import {ApiError} from "../utils/ApiError";
-import {ApiResponse} from "../utils/ApiResponse"
-import User from "../models/user.model.js"
+import { asyncHandler } from "../utils/asyncHandler.js";
+import {ApiError} from "../utils/ApiError.js";
+import {ApiResponse} from "../utils/ApiResponse.js"
+import {User} from "../models/user.model.js"
+import {Assessment} from "../models/assessment.model.js"
+import mongoose from "mongoose";
+import jwt from 'jsonwebtoken'
 
-const generateToken = async (userId) => {
+const generateuserToken = async (userId) => {
     try {
         const user = await User.findById(userId);
-        const token = user.generateToken();
-        return token
+        const generatedToken = user.generateToken();
+        // console.log(generatedToken);
+        
+        user.token = generatedToken;
+        
+        await user.save({validateBeforeSave : false});
+        return generatedToken
 
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating token")
+        throw new ApiError(500, "Something went wrong while generating token",error)
     }
 }
 
@@ -36,19 +44,28 @@ const verifytoken = asyncHandler(
         if (!user){
             throw new ApiError(500, "No user with this token exists")
         }
+
+        const newToken = await generateuserToken(user._id);
+
+        const options = {
+            secure:true
+        }
         
         return res
         .status(200)
+        .cookie("token",  newToken , options)
         .json(
             new ApiResponse(
                 200,
                 user,
-                "User Verified "
+                "User Verified"
             )
         )
     }
 )
 
+//this functions checks if the token is present and if present then - is it valid? 
+//then finds the user data from the token and also genererate a new token to keep the session alive for another 24 hours
 const verifyEmail = asyncHandler(
     async (req,res)=>{
         const {email : incomingEmail} = req.body
@@ -78,9 +95,14 @@ const registerUser = asyncHandler(
     // get user details from frontend 
     const{ name, email, password, designation, role, managerId, batch} = req.body
 
+    if((role.toLowerCase() === 'user' ) && (!managerId)){
+        throw new ApiError(400, "Manager Id is required for users which are not admin");
+    }
+
+    const manId = ((role.toLowerCase() === 'user' ) ? new mongoose.Types.ObjectId(managerId) : null);
     // validation -not empty
     if (
-        [name, email, password, designation, role, managerId, batch].some((field) => field?.trim()==="")
+        [name, email, password, designation, role, batch].some((field) => field?.trim()==="")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -100,13 +122,13 @@ const registerUser = asyncHandler(
         password,
         designation,
         role,
-        managerId,
+        managerId : manId,
         batch
     })
 
     // remove password from response
     const createdUser = await User.findById(user._id).select(
-        "-password"
+        "-password -token"
     )
 
     // check for user creation
@@ -133,11 +155,13 @@ const loginUser = asyncHandler(
             throw new ApiError(400, "Email is required",);
         }
 
-        const user = await User.findOne({email})
+        const user = await User.findOne({email : email.toLowerCase()})
 
         if(!user){
             throw new ApiError(400, "User doesn't exist");
         }
+        // console.log(user);
+        
 
         const isPasswordValid = await user.isPasswordCorrect(password);
 
@@ -145,9 +169,10 @@ const loginUser = asyncHandler(
             throw new ApiError(400, "Incorrect Password");
         }
 
-        const token = await generateToken(user._id);
+        const token = await generateuserToken(user._id);
+        // console.log(token);
 
-        const loggedInUser = await User.findById(user._id).select("-password");
+        const loggedInUser = await User.findById(user._id).select("-password -token");
 
         const options = {
             // httpOnly : true,
@@ -259,19 +284,25 @@ const changeCurrentUserPassword = asyncHandler(
     }
 )
 
-const getUserById = asyncHandler(
+const getUsers = asyncHandler(
     async(req, res) => {
-        const {id :userId} = req.params;
+        const { batch, managerId, userId} = req.query;
 
-        if(!userId){
-            throw new ApiError(500, "UserId is required")
+        const query = {};
+
+        if(batch){
+            query.batch = String(batch)
+        }
+        if(managerId){
+            query.managerId = new mongoose.Types.ObjectId(managerId); 
+        }
+        if(userId){
+            query._id = new mongoose.Types.ObjectId(userId); 
         }
 
-        const user = await User.aggregate([
+        const users = await User.aggregate([
             {
-                $match : {
-                    _id : new mongoose.Types.ObjectId(userId)
-                }
+                $match : query
             },
             {
                 $project : {
@@ -281,14 +312,14 @@ const getUserById = asyncHandler(
             }
         ])
 
-        if (user.length === 0){
-            throw new ApiError(400, "User with this Id doesn't exist")
+        if (users.length === 0){
+            throw new ApiError(400, "No users with given credentials exist")
         }
 
         return res
         .status(200)
         .json(
-            new ApiResponse(200, user[0], "User fetched successfully")
+            new ApiResponse(200, users, "Users fetched successfully")
         ) 
     }
 )
@@ -325,14 +356,52 @@ const getCurrentUser = asyncHandler(
     }
 )
 
+const deleteUser = asyncHandler(
+    async(req, res) => {
+
+        const messageDeletion = await Assessment.deleteMany({
+            $or :[{userAssessed : req.user._id}, { assessedBy : req.user._id }]
+        })
+
+        if (!messageDeletion){
+            throw new ApiError(500, "Something went wrong while deleting user data")
+        }
+
+        const user = await User.findById(req.user._id);
+ 
+        if (!user) { 
+            throw new ApiError(500, "User not found in database")
+        }
+
+        const userDeletion = await User.findByIdAndDelete(req.user._id)
+
+        if (!userDeletion){
+            throw new ApiError(500, "Something went wrong while deleting user profile")
+        }
+
+        const options = {
+            // httpOnly : true,
+            secure : true
+        }
+
+        return res
+        .status(200)
+        .clearCookie("token", options)
+        .json( 
+            new ApiResponse(204, {}, "User deleted successfully")
+        )
+    }
+)
+
 export {
     verifytoken,
     verifyEmail,
     registerUser,
     loginUser,
     logoutUser,
-    getUserById,
+    getUsers,
     getCurrentUser,
     changePasswordByCode,
     changeCurrentUserPassword,
+    deleteUser
 }

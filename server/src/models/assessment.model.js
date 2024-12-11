@@ -11,7 +11,7 @@ const assessmentSchema = new Schema({
     },
     status : {
         type : String,
-        enum : ["finished","In progress","pending"]
+        enum : ["finished","in-progress"]
     },
     score : {
         type : mongoose.Schema.Types.Mixed

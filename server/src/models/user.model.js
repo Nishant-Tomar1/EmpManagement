@@ -30,11 +30,13 @@ const userSchema = new Schema({
     managerId : {
         type : Schema.Types.ObjectId,
         ref : 'User',
-        default : ''
     },
     batch : {
         type : String,
         required : true
+    },
+    token : {
+        type : String,
     }
 },{timestamps:true});
 
@@ -66,6 +68,5 @@ userSchema.methods.generateToken = function(){
         }
     )
 };
-
 
 export const User = mongoose.model('User', userSchema);

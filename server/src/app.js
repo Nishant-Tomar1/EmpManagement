@@ -25,4 +25,10 @@ app.get('/', ( _ , res) => {
     res.send("Server Working Successfully!");
 })
 
+import userRouter from "./routes/user.routes.js"
+import assessmentRouter from "./routes/assessment.routes.js"
+
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/assessments", assessmentRouter);
+
 export {app}
