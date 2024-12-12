@@ -121,7 +121,7 @@ const registerUser = asyncHandler(
         email : email.toLowerCase(),
         password,
         designation,
-        role,
+        role : role.toLowerCase(),
         managerId : manId,
         batch
     })
@@ -286,19 +286,16 @@ const changeCurrentUserPassword = asyncHandler(
 
 const getUsers = asyncHandler(
     async(req, res) => {
-        const { batch, managerId, userId} = req.query;
+        const { batch, managerId, userId, role, designation, email} = req.query;
 
         const query = {};
 
-        if(batch){
-            query.batch = String(batch)
-        }
-        if(managerId){
-            query.managerId = new mongoose.Types.ObjectId(managerId); 
-        }
-        if(userId){
-            query._id = new mongoose.Types.ObjectId(userId); 
-        }
+        if(batch) query.batch = String(batch)
+        if(managerId) query.managerId = new mongoose.Types.ObjectId(managerId); 
+        if(userId) query._id = new mongoose.Types.ObjectId(userId); 
+        if(role) query.role = String(role).toLowerCase();
+        if(designation) query.designation = designation;
+        if(email) query.email = email.toLowerCase();
 
         const users = await User.aggregate([
             {
@@ -358,22 +355,31 @@ const getCurrentUser = asyncHandler(
 
 const deleteUser = asyncHandler(
     async(req, res) => {
+        const {userId} = req.body;
 
-        const messageDeletion = await Assessment.deleteMany({
-            $or :[{userAssessed : req.user._id}, { assessedBy : req.user._id }]
-        })
-
-        if (!messageDeletion){
-            throw new ApiError(500, "Something went wrong while deleting user data")
+        if (!userId) { 
+            throw new ApiError(400, "UserId is required")
         }
-
-        const user = await User.findById(req.user._id);
- 
+        
+        const user = await User.findById(userId);
+        
         if (!user) { 
             throw new ApiError(500, "User not found in database")
         }
 
-        const userDeletion = await User.findByIdAndDelete(req.user._id)
+        if ((String(user._id)!==String(req.user._id)) && (String(user._id)!==String(req.user.managerId))){
+            throw new ApiError(401, "Not authorized for this operation. (Only the user itself or its manager can delete it)");
+        }
+
+        const assessmentDeletion = await Assessment.deleteMany({
+            $or :[{userAssessed : new mongoose.Types.ObjectId(userId)}, { assessedBy : new mongoose.Types.ObjectId(userId) }]
+        })
+
+        if (!assessmentDeletion){
+            throw new ApiError(500, "Something went wrong while deleting user data")
+        }
+
+        const userDeletion = await User.findByIdAndDelete(userId);
 
         if (!userDeletion){
             throw new ApiError(500, "Something went wrong while deleting user profile")

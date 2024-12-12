@@ -30,6 +30,7 @@ router.route("/verifyemail").post(verifyEmail);
 
 router.route("/sendemail").post(sendEmailHandler);
 
+router.route("/change-password-by-code").post( changePasswordByCode );
 //secured routes
 router.route("/logout").post(verifyJWT, logoutUser); 
 

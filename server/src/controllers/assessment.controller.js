@@ -3,6 +3,38 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { Assessment } from "../models/assessment.model.js";
+import mongoose from "mongoose";
+
+const getAssessments = asyncHandler(
+    async(req,res)=>{
+        const {userAssessed, assessedBy, assessmentId, status} = req.query;
+        // console.log(req.query);
+        
+        const query = {};
+
+        if(userAssessed) query.userAssessed = new mongoose.Types.ObjectId(userAssessed);
+        if(assessedBy) query.assessedBy = new mongoose.Types.ObjectId(assessedBy);
+        if(assessmentId) query._id = new mongoose.Types.ObjectId(assessmentId);
+        if(status) query.status = status.toLowerCase();
+
+        console.log(query);
+        
+
+        const assessments = await Assessment.aggregate([
+            {
+                $match : query 
+            }
+        ])
+
+        if(!assessments.length) throw new ApiError(404, "No data found with given credentials");
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, assessments, "Fetched Successfully!")
+        )
+    }
+)
 
 const addAssessment = asyncHandler(
     async(req, res) => {
@@ -103,7 +135,42 @@ const updateAssessment = asyncHandler(
     }
 )
 
+const deleteAssessment = asyncHandler(
+    async(req,res)=>{
+        
+        const {assessmentId} = req.body;
+        if(!assessmentId){
+            throw new ApiError(400, "Assessment Id is required");
+        }
+        
+        const assessment = await Assessment.findById(assessmentId);
+        
+        if(!assessment){
+            throw new ApiError(404, "Invalid Assessment Id");
+        }
+    
+        if (req.user.role.toLowerCase() !== "admin"){
+            throw new ApiError(401, "Only Admins are authorized for this operation.");
+        }
+
+        const deleted = await Assessment.findByIdAndDelete(assessment._id);
+
+        if (!deleted){
+            throw new ApiError(500, "Something went wrong while deleting from database.");
+        }
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(204, {} , "Deleted successfully")
+        )
+
+    }
+)
+
 export {
     addAssessment,
-    updateAssessment
+    updateAssessment,
+    deleteAssessment,
+    getAssessments
 }
