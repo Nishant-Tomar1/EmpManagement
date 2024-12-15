@@ -26,7 +26,7 @@ export const verifyJWT = asyncHandler(
             next()
             
         } catch (error) {
-            throw new ApiError(404, error?.message || "Token validation failed!!")
+            throw new ApiError(404, "Token validation failed!!")
         }
 
     }

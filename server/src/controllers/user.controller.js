@@ -22,6 +22,8 @@ const generateuserToken = async (userId) => {
     }
 }
 
+//this functions checks if the token is present and if present then - is it valid? 
+//then finds the user data from the token and also genererate a new token to keep the session alive for another 24 hours
 const verifytoken = asyncHandler(
     async (req, res) => {
         let token;
@@ -64,8 +66,6 @@ const verifytoken = asyncHandler(
     }
 )
 
-//this functions checks if the token is present and if present then - is it valid? 
-//then finds the user data from the token and also genererate a new token to keep the session alive for another 24 hours
 const verifyEmail = asyncHandler(
     async (req,res)=>{
         const {email : incomingEmail} = req.body
@@ -79,7 +79,7 @@ const verifyEmail = asyncHandler(
         ])
 
         if (user.length === 0){
-            throw new ApiError(500, "User with this Email doesn't exist")
+            throw new ApiError(500, "User with this Email does not exist")
         }
 
         return res
@@ -92,7 +92,7 @@ const verifyEmail = asyncHandler(
 
 const registerUser = asyncHandler( 
     async (req,res) => {
-    // get user details from frontend 
+    // get user details from client side
     const{ name, email, password, designation, role, managerId, batch} = req.body
 
     if((role.toLowerCase() === 'user' ) && (!managerId)){
@@ -100,22 +100,19 @@ const registerUser = asyncHandler(
     }
 
     const manId = ((role.toLowerCase() === 'user' ) ? new mongoose.Types.ObjectId(managerId) : null);
-    // validation -not empty
+
     if (
         [name, email, password, designation, role, batch].some((field) => field?.trim()==="")
     ) {
         throw new ApiError(400, "All fields are required")
     }
 
-    // check if user already exists : email
     const ExistedUser = await User.findOne({email})
 
     if (ExistedUser) {
         throw new ApiError(409, "User with this email already exists")
     }
 
-
-    // create user object - create entry in db 
     const user = await User.create({
         name : name,
         email : email.toLowerCase(),
@@ -126,20 +123,17 @@ const registerUser = asyncHandler(
         batch
     })
 
-    // remove password from response
     const createdUser = await User.findById(user._id).select(
         "-password -token"
     )
 
-    // check for user creation
     if (!createdUser) { 
         throw new ApiError(500, "Something went wrong during user registration" )
     }
 
-    // console.log("User Registered Successfully!!");
-
     // return res
-    return res.status(201).json(
+    return res.status(200)
+    .json(
         new ApiResponse(200, createdUser, "User registered successfully")
     )
     
@@ -152,13 +146,14 @@ const loginUser = asyncHandler(
         const {email,password} = req.body;
 
         if (!email){
-            throw new ApiError(400, "Email is required",);
+            throw new ApiError(400, "Email is required!",);
         }
+        if(!password) throw new ApiError(400, "Password is required!")
 
         const user = await User.findOne({email : email.toLowerCase()})
 
         if(!user){
-            throw new ApiError(400, "User doesn't exist");
+            throw new ApiError(400, "User with this email does not exist");
         }
         // console.log(user);
         

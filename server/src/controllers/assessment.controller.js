@@ -17,8 +17,7 @@ const getAssessments = asyncHandler(
         if(assessmentId) query._id = new mongoose.Types.ObjectId(assessmentId);
         if(status) query.status = status.toLowerCase();
 
-        console.log(query);
-        
+        // console.log(query)
 
         const assessments = await Assessment.aggregate([
             {
@@ -44,7 +43,7 @@ const addAssessment = asyncHandler(
             throw new ApiError(400, "All data fields are required!");
         }
 
-        if (!(["in-progress","pending"].includes(status.toLowerCase()))){
+        if (!(["in-progress","pending","finished"].includes(status.toLowerCase()))){
             throw new ApiError(400, "Invalid status format!! Enter any one among : pending, in-progress, finished");
         }
 
@@ -58,7 +57,7 @@ const addAssessment = asyncHandler(
             throw new ApiError(400, "Invalid userId for assesser !!");
         }
 
-        console.log(user1._id, user2._id, req.user._id);
+        // console.log(user1._id, user2._id, req.user._id);
         if (String(user1._id) !== String(user2._id)){
             if (String(user1.managerId) !== String(user2._id)){
                 throw new ApiError(401,"Only manager and the user itself can fill assessment");
