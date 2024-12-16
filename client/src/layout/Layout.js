@@ -9,7 +9,7 @@ function Layout({children}) {
     <>
       <div className={`${theme}`}>
         <Toast/>
-        <div className='bg-gray-100 dark:bg-[#191919] min-h-[100vh] w-full'>
+        <div className=' min-h-[100vh] w-full'>
           {children}
         </div>
       </div>

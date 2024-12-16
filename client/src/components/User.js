@@ -3,7 +3,7 @@ import { useLogin } from "../store/contexts/LoginContextProvider";
 import {useAlert} from "../store/contexts/AlertContextProvider"
 import { useState } from "react";
 import Loader from "./Loader"
-import { useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import axios from 'axios'
 import {extractErrorMessage, Server} from "../constants"
 
@@ -33,8 +33,8 @@ export default function User() {
   return (
     <Dropdown label={loginCtx.name || "User"} dismissOnClick={false}>
       <Dropdown.Item>Dashboard</Dropdown.Item>
-      <Dropdown.Item>Settings</Dropdown.Item>
-      <Dropdown.Item>Self Assessment</Dropdown.Item>
+      <Link to="/change-password"> <Dropdown.Item>Change Password</Dropdown.Item> </Link>
+      <Link to={`/self-assessment/${loginCtx.userId}`}> <Dropdown.Item>Self Assessment</Dropdown.Item> </Link>
       <Dropdown.Divider/>
       {!loading ? <div onClick={()=>{alertCtx.showConfirm("Do you really want to Logout ?",handlelogout)}}> <Dropdown.Item className="text-red-500" >Sign Out</Dropdown.Item> </div> : <Loader size="md" color="failure"/>}
     </Dropdown>

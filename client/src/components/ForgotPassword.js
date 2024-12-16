@@ -11,9 +11,9 @@ function ForgotPassword() {
     const [loading, setLoading] = useState(false)
     const [id, setId] = useState("")
     const [steps, setSteps] = useState({
-        1 : false,
+        1 : true,
         2 : false,
-        3 : true
+        3 : false
     })
     const [code , setCode] = useState("")
     const [actualCode, setActualCode] = useState()
@@ -159,7 +159,7 @@ function ForgotPassword() {
                         </div>
                     </div>
                 </div>
-                <p className='text-center'><span className='font-bold'>Note : </span>Password should be at least 6 characters long, should include letters, numbers and special characters.</p> <br />
+                {/* <p className='text-center'><span className='font-bold'>Note : </span>Password should be at least 6 characters long, should include letters, numbers and special characters.</p> <br /> */}
                 <button type='submit' disabled={loading ? true : false} className="w-full shadow-lg text-white bg-cyan-500 hover:bg-cyan-600  font-medium rounded-lg text-md px-5 py-2.5 text-center dark:bg-teal-500 dark:hover:bg-teal-600 ">{ loading ? <Loader size='md'/> : "Submit" } </button>
                 <p  className="w-full text-center mt-3 text-sm  opacity-40"> Warning! Do not refresh the page</p>
                 </form>

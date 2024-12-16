@@ -44,7 +44,7 @@ function AlertContextProvider({children}){
     };
 
     const handleConfirmFuntion = () => {
-        if (confirmState.onConfirm) {
+        if (confirmState?.onConfirm) {
             confirmState.onConfirm();
         }
         hideConfirmHandler();

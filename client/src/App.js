@@ -10,6 +10,8 @@ import { extractErrorMessage, Server } from "./constants.js";
 import { useLogin } from "./store/contexts/LoginContextProvider.js";
 import Loader from "./components/Loader.js";
 import ForgotPassword from "./components/ForgotPassword.js";
+import SelfAssessment from "./pages/SelfAssessment.js";
+import ChangePassword from "./pages/ChangePassword.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -54,6 +56,8 @@ function App() {
           <Route path="/" element={<HomePage/>} />
           <Route path="/auth" element={<Auth/>} />
           <Route path="/forgotpassword" element={<ForgotPassword/>} />
+          <Route path="/self-assessment/:userId" element={<SelfAssessment/>}/>
+          <Route path="/change-password" element={<ChangePassword/>} />
           <Route path="*" element={<NotFound/>}/>
       </Routes>
       :
