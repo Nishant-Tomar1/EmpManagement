@@ -100,10 +100,10 @@ function Toast() {
                         <div className="mb-2 text-center text-lg font-normal text-gray-800 dark:text-gray-100">{alertCtx.confirmState.message}</div> 
                         <div className="grid grid-cols-2 gap-2 ">
                             <div>
-                                <button onClick={()=>{alertCtx.handleConfirm()}} className="inline-flex justify-center w-full px-2 py-2 text-xs font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-2 focus:outline-none focus:ring-orange-200 dark:bg-orange-500 dark:hover:bg-orange-600 dark:focus:ring-orange-800">Yes</button>
+                                <button onClick={()=>{alertCtx.handleConfirm()}} className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-2 focus:outline-none focus:ring-orange-200 dark:bg-orange-500 dark:hover:bg-orange-600 dark:focus:ring-orange-800">Yes</button>
                             </div>
                             <div>
-                                <button onClick={()=>{alertCtx.hideConfirm()}} className="inline-flex justify-center w-full px-2 py-2 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:outline-none focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">No</button> 
+                                <button onClick={()=>{alertCtx.hideConfirm()}} className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:outline-none focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">No</button> 
                             </div>
                         </div>    
                     </div>

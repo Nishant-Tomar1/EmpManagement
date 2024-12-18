@@ -19,14 +19,14 @@ export const verifyJWT = asyncHandler(
             const user = await User.findById(decodedToken?._id).select("-password");
     
             if (!user) { 
-                throw new ApiError(401,"Invalid Token");
+                throw new ApiError(401,"Session Expired! Login Again");
             }
     
             req.user = user;
             next()
             
         } catch (error) {
-            throw new ApiError(404, "Token validation failed!!")
+            throw new ApiError(404, "Login Again (session expired)!")
         }
 
     }

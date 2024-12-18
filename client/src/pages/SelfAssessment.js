@@ -4,10 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { extractErrorMessage, selfQuestions, Server } from "../constants";
 import { useLogin } from "../store/contexts/LoginContextProvider";
 import {useAlert} from "../store/contexts/AlertContextProvider"
-import { IoMdArrowRoundBack, IoMdClose } from "react-icons/io";
+import { IoIosArrowBack, IoMdArrowRoundBack, IoMdClose } from "react-icons/io";
 import { RiStarFill, RiStarLine } from "react-icons/ri";
 import logo from "../assets/logos/logo.png"
 import { IoMenu } from "react-icons/io5";
+import PeiChart from "../components/PeiChart";
 
 function SelfAssessment() {
   const [ showReport, setShowReport] = useState(false);
@@ -138,7 +139,7 @@ function SelfAssessment() {
   const navigate = useNavigate();
 
   const verify = async () => {
-    console.log("verifying");
+    // console.log("verifying");
     setLoading(true);
     try {
         const res = await axios.get(`${Server}/users/getusers?userId=${userId}`);
@@ -225,7 +226,11 @@ function SelfAssessment() {
           score : score
         },{withCredentials:true});
         // console.log(res);
-      if (res?.data?.statusCode === 200) return alertCtx.setToast("success",(status === "finished") ? "Submitted Successfully":"Saved Successfully")
+      if (res?.data?.statusCode === 200) {
+        alertCtx.setToast("success",(res.data?.data?.status === "finished") ? "Submitted Successfully":"Saved Successfully");
+        if ((res.data?.data?.status === "finished")) return navigate("/");
+        return;
+      }
       }
       
     } catch (error) {
@@ -262,7 +267,7 @@ function SelfAssessment() {
     <>
       {!loading ? (
         <>
-          <div className="cursor-pointer text-3xl p-2" title="back" onClick={() => {navigate("/");}}><IoMdArrowRoundBack /></div>
+          <div className='flex cursor-pointer text-2xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
           {verified ? 
  
           <div className="flex flex-col sm:flex-row w-ful bg-whitel">
@@ -317,20 +322,20 @@ function SelfAssessment() {
               </div>
 
               {/* Main Content */}
-             {!showReport ?  <div className="flex-1 p-6 md:w-3/4">
-                <span className="text-red-500"> {status === "finished" && "Note : You cannot edit this document now"} </span>
-                <ol className="items-center w-full md:px-4 sm:flex sm:space-x-4 sm:space-y-0 rtl:space-x-reverse">
+             {!showReport ?  <div className="flex-1 p-6 py-4 md:w-3/4">
+              {(userId === loginCtx.userId) &&<span className="text-red-500"> {status === "finished" && "Note : You cannot edit this document now"} </span>}
+                <ol className="items-center w-full md:px-4 sm:flex sm:space-x-3 sm:space-y-0 rtl:space-x-reverse">
                   {selfQuestions?.map((category, index) => (
                     <li 
                       key={index} 
                       onClick={() => { setActive(index); }} 
-                      className={`flex items-center cursor-pointer transition-colors duration-300 ${(active === index) ? "text-blue-600" : "text-gray-800"} hover:bg-gray-100 p-3 rounded-xl`}
+                      className={`flex text-sm items-center cursor-pointer transition-colors duration-300 ${(active === index) ? "text-blue-600" : "text-gray-800"} hover:bg-gray-100 p-2 rounded-xl`}
                     >
-                      <span className={`flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold border 500 ${(active === index) ? "border-blue-600" : "border-gray-400"}  rounded-full shrink-0`}>
+                      <span className={`flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold border-2  ${(active === index) ? "border-blue-600" : "border-gray-400"}  rounded-full shrink-0`}>
                         {index + 1}
                       </span>
-                      <span className="font-medium">{category.category.toUpperCase()}</span>
-                      {index < 5 && (
+                      <span className="font-bold">{category.category.toUpperCase()}</span>
+                      {(index < selfQuestions.length-1) && (
                         <svg 
                           className={`w-4 h-4 ms-2 sm:ms-4 rtl:rotate-180 ${(active === index) ? "text-blue-600" : "text-gray-800"}`} 
                           aria-hidden="true" 
@@ -351,17 +356,19 @@ function SelfAssessment() {
                   ))}
                 </ol>
 
-                <div className="mt-6"> 
+                <div className="mt-4"> 
                   {selfQuestions[active]?.subcategories?.map(sub => (
                     <div 
                       key={sub.subcategory} 
                       className="mb-6 border-b border-gray-300 pb-4 last:border-none"
                     >
                       <div className="w-full mb-3">
-                        <p className="text-lg font-semibold text-gray-700"> <span className="font-bold"> {sub.SNo}</span> . {sub.question}</p>
+                        <p className="text-lg font-bold text-gray-700"> <span className="font-bold"> {sub.SNo}</span> . {sub.question}</p>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <textarea 
+                        
+                        <textarea
+                          placeholder="comment*"
                           key={sub.SNo + selfQuestions.length + 1} 
                           className={`w-full h-24 lg:h-16 md:w-2/3 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent cursor-${!editAccess && "not-allowed"}`}
                           readOnly={!editAccess}
@@ -369,11 +376,12 @@ function SelfAssessment() {
                           onChange={(e) => { handleCommentChange(selfQuestions[active].category, sub.subcategory, e.target.value); }}
                         />
                         <div className="flex gap-1 text-lg mt-3 sm:mt-0 md:w-1/3 sm:justify-center"> 
-                        Score : 
+
+                        {/* Score :  */}
                           {
                             [1, 2, 3, 4, 5].map((value) => (
                               <span 
-                                className={`cursor-${editAccess ? "pointer" : "not-allowed"} text-yellow-400 text-xl`}
+                                className={`cursor-${editAccess ? "pointer" : "not-allowed"} text-yellow-300 text-xl`}
                                 key={value} 
                                 onClick={() => { if(editAccess){handleRatingChange(selfQuestions[active].category, sub.subcategory, value)}; }}
                               >
@@ -381,18 +389,15 @@ function SelfAssessment() {
                               </span>
                             ))
                           }
-                          <button onClick={() => { if(editAccess){handleRatingChange(selfQuestions[active].category, sub.subcategory, 0)};}} className="underline text-sm"> clear</button>
+                          <button className={`cursor-${editAccess ? "pointer" : "not-allowed"} px-2 text-sm`} onClick={() => { if(editAccess){handleRatingChange(selfQuestions[active].category, sub.subcategory, 0)};}} > clear</button>
                         </div>
                       </div>
                     </div>
                   ))}
 
-                  <div className="flex justify-center space-x-4 mt-4 font-semibold">
-                    {selfQuestions[active].category.toLocaleUpperCase()} SCORE : {getScore(selfQuestions[active].category)}/20
-                   </div>
+                  
 
-                 {editAccess && <div className="flex justify-end space-x-4 mt-4">
-
+                 {(status !== "finished") && (editAccess) && <div className="flex justify-center space-x-4 mt-4">
                    
                     {(active > 0) && (
                       <button 
@@ -430,10 +435,14 @@ function SelfAssessment() {
                    
                    
                   </div>}
+
+                  <div className="flex justify-center items-center space-x-4 my-2 font-bold text-blue-800">
+                    {selfQuestions[active].category.toLocaleUpperCase()} SCORE : {getScore(selfQuestions[active].category)}/20
+                   </div>
                 </div>
               </div>
               :
-              <div className="flex-1 p-6 md:w-3/4">report</div>
+              <PeiChart score={score}/>
               }
           </div>
 

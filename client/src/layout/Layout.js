@@ -2,6 +2,7 @@ import React from 'react'
 // import { Outlet } from 'react-router-dom'
 import Toast from '../components/Toast.js'
 import { useTheme } from '../store/contexts/ThemeContextProvider.js'
+import Navbar from '../components/Navbar.js';
 
 function Layout({children}) {
   const {theme} = useTheme();
@@ -9,7 +10,8 @@ function Layout({children}) {
     <>
       <div className={`${theme}`}>
         <Toast/>
-        <div className=' min-h-[100vh] w-full'>
+          <Navbar/>
+        <div className=' w-full'>
           {children}
         </div>
       </div>

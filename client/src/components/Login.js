@@ -46,14 +46,19 @@ function Login() {
           }
     }
   return (
-    <div>
-      <form action="" onSubmit={handleSumbit}>
-        <input type="text" value={user.email} name='email' onChange={handleUserChange}/> <br />
-        <input type="text" value={user.password} name='password' onChange={handleUserChange}/>
-        <button type='submit'>{loading?"loading...":"Login"} </button>
-      </form>
-        <Link to="/forgotpassword">Forgot Password?</Link>
-    </div>
+  <div className="container mx-auto px-4 py-8 flex justify-center items-center h-screen">
+    <form action="" onSubmit={handleSumbit} className="bg-gray-200 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+      <div className='w-full text-3xl text-center'>Login</div>
+      <label htmlFor="">Email</label>
+      <input type="text" value={user.email} name="email" onChange={handleUserChange} className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50" />
+      <label htmlFor="">Password</label>
+      <input type="text" value={user.password} name="password" onChange={handleUserChange} className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50" />
+      <button type="submit" className="w-full px-4 py-2 bg-green-400 text-white font-bold rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400 focus:ring-opacity-50">
+        {loading ? "loading..." : "Login"}
+      </button>
+    <Link to="/forgotpassword" className="text-blue-500 hover:underline">Forgot Password?</Link>
+    </form>
+</div>
   )
 }
 

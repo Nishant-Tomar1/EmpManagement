@@ -5,7 +5,7 @@ import { useAlert } from '../store/contexts/AlertContextProvider'
 import axios from 'axios'
 import { extractErrorMessage, Server } from '../constants'
 import Loader from '../components/Loader'
-import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 
 function ChangePassword() {
     const [loading, setLoading] = useState(false)
@@ -39,13 +39,13 @@ function ChangePassword() {
 
     return (
         <>
-            <div className='cursor-pointer text-3xl p-2' onClick={()=>{navigate("/")}}><IoMdArrowRoundBack/></div>
-        <div  className="flex flex-col w-full items-center bg-gray-100 dark:bg-[#191919] dark:text-white justify-center min-h-[70vh]">
+            <div className='flex cursor-pointer text-2xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
+        <div  className="flex flex-col w-full items-center dark:bg-[#191919] dark:text-white justify-center min-h-[60vh]">
             <div className='flex flex-col w-full items-center justify-center '>
                 <h1 className='text-xl lg:text-2xl font-semibold mb-5 text-gray-700 dark:text-white'>Update Password</h1>
                 <form action="" className=" mx-auto w-5/6 md:w-1/2 lg:w-1/3" onSubmit={handlePasswordUpdate}>
                 <div className="mb-4">
-                    <label name="oldPassword" className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-200">Old Password</label>
+                    <label name="oldPassword" className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-200">Current Password</label>
                     <div className="flex rounded-lg ">
                         <input type={showpassword ? "text" : "password"} autoComplete="off" name="oldPassword" className="w-10/12 shadow-md bg-gray-50 border border-gray-300 border-r-0 text-gray-900 text-md rounded-l-lg focus:ring-0 focus:border-gray-400 block ps-4 p-2.5 dark:bg-[#202020] dark:border-gray-600 dark:placeholder-gray-400 dark:text-white  "  placeholder="Old Password" value={oldPassword} 
                         onChange={ (e) => setOldPassword(e.target.value)}/>
@@ -61,7 +61,7 @@ function ChangePassword() {
                         </div>
                     </div>
                 </div>
-                <button type='submit' className="w-full shadow-lg text-white bg-cyan-500 hover:bg-cyan-600  font-medium rounded-lg text-md px-5 py-2.5 text-center dark:bg-teal-500 dark:hover:bg-teal-600 ">{ loading ? <Loader size='md'/> : "Submit" } </button>
+                <button type='submit' className="w-full shadow-lg text-white bg-green-400 hover:bg-green-600  font-medium rounded-lg text-md px-5 py-2.5 text-center dark:bg-green-400 dark:hover:bg-green-600 ">{ loading ? <Loader size='md'/> : "Submit" } </button>
                 </form>
 
             </div>

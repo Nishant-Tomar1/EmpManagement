@@ -120,7 +120,7 @@ const registerUser = asyncHandler(
         designation,
         role : role.toLowerCase(),
         managerId : manId,
-        batch
+        batch : batch.toLowerCase().trim()
     })
 
     const createdUser = await User.findById(user._id).select(
@@ -297,7 +297,44 @@ const getUsers = asyncHandler(
                 $match : query
             },
             {
+                $lookup: {
+                    from: "assessments",
+                    localField: "_id",
+                    foreignField: "userAssessed",
+                    as: "assessments"
+                }
+            },
+            {
+                $addFields: {
+                    "self-assessment": {
+                        $filter: {
+                            input: "$assessments",
+                            as: "assessment",
+                            cond: { 
+                                $and: [
+                                    { $eq: ["$$assessment.assessedBy", "$_id"] },
+                                    { $eq: ["$$assessment.userAssessed", "$_id"] }
+                                ]
+                             }
+                        }
+                    },
+                    "manager-assessment": {
+                        $filter: {
+                            input: "$assessments",
+                            as: "assessment",
+                            cond: {
+                                $and: [
+                                    { $eq: ["$$assessment.assessedBy", "$managerId"] },
+                                    { $eq: ["$$assessment.userAssessed", "$_id"] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
                 $project : {
+                    assessments: 0,
                     password : 0,
                     token : 0,
                 }
@@ -345,6 +382,46 @@ const getCurrentUser = asyncHandler(
             user[0],
             "Current User fetched Successfully"
         ));
+    }
+)
+
+const getBatchesUndergivenManager = asyncHandler(
+    async(req, res) => {
+
+        if (req.user.role !== "admin"){
+            throw new ApiError(401, "Not authorized. Login as a manager(admin) first.")
+        }
+
+        const batches = await User.aggregate([
+            {
+                $match: {
+                    managerId: new mongoose.Types.ObjectId(req.user._id)
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    batches: { $addToSet: "$batch" }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    batches: 1
+                }
+            }
+        ])
+
+        if(!batches.length){
+            throw new ApiError(404, "No batches found under this manager")
+        }
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, batches[0], "Fetched Successfully" )
+        )
+
     }
 )
 
@@ -402,6 +479,7 @@ export {
     logoutUser,
     getUsers,
     getCurrentUser,
+    getBatchesUndergivenManager,
     changePasswordByCode,
     changeCurrentUserPassword,
     deleteUser

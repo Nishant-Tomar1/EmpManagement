@@ -12,6 +12,8 @@ import Loader from "./components/Loader.js";
 import ForgotPassword from "./components/ForgotPassword.js";
 import SelfAssessment from "./pages/SelfAssessment.js";
 import ChangePassword from "./pages/ChangePassword.js";
+import EmployeeAssessment from "./pages/EmployeeAssessment.js";
+import EmpSelf from "./pages/EmpSelf.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ function App() {
         withCredentials:true
       })
       if (res.status ===200){
-        console.log("verified");
+        console.log("user auto loggedIn");
         const user = res?.data?.data;
         loginCtx.login(user?._id, user?.name,user?.role, user?.token );
         setLoading(false);
@@ -44,7 +46,6 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    console.log("page rendered");
     verifyToken();
   },[])
   
@@ -57,6 +58,8 @@ function App() {
           <Route path="/auth" element={<Auth/>} />
           <Route path="/forgotpassword" element={<ForgotPassword/>} />
           <Route path="/self-assessment/:userId" element={<SelfAssessment/>}/>
+          <Route path="/emp-assessment/:userId" element={<EmployeeAssessment/>}/>
+          <Route path="/emp-self" element={<EmpSelf/>}/>
           <Route path="/change-password" element={<ChangePassword/>} />
           <Route path="*" element={<NotFound/>}/>
       </Routes>
