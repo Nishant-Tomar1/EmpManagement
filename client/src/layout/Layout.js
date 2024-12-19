@@ -9,10 +9,12 @@ function Layout({children}) {
   return (
     <>
       <div className={`${theme}`}>
-        <Toast/>
+        <div className='min-h-screen dark:bg-[#191919] dark:text-gray-200'>
+          <Toast/>
           <Navbar/>
-        <div className=' w-full'>
+          <div className=' w-full'>
           {children}
+        </div>
         </div>
       </div>
     </>

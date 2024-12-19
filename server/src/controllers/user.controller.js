@@ -21,7 +21,6 @@ const generateuserToken = async (userId) => {
         throw new ApiError(500, "Something went wrong while generating token",error)
     }
 }
-
 //this functions checks if the token is present and if present then - is it valid? 
 //then finds the user data from the token and also genererate a new token to keep the session alive for another 24 hours
 const verifytoken = asyncHandler(
@@ -143,20 +142,24 @@ const registerUser = asyncHandler(
 const loginUser = asyncHandler(
     async(req,res) => {
         
-        const {email,password} = req.body;
+        const {name,email,password} = req.body;
 
-        if (!email){
-            throw new ApiError(400, "Email is required!",);
+        if (!email && !name){
+            throw new ApiError(400, "Either Name or Email is required!",);
         }
+
         if(!password) throw new ApiError(400, "Password is required!")
-
-        const user = await User.findOne({email : email.toLowerCase()})
-
-        if(!user){
-            throw new ApiError(400, "User with this email does not exist");
-        }
-        // console.log(user);
+    
+        const user = await User.findOne({
+            $or : [
+                {email : email.toLowerCase()},
+                {name : name}
+            ]
+        });
         
+        if(!user){
+            throw new ApiError(400, `User with this ${(name && email) ? "name or email" :( (name) ? "name" : "email")} does not exist`);
+        }
 
         const isPasswordValid = await user.isPasswordCorrect(password);
 
@@ -306,7 +309,7 @@ const getUsers = asyncHandler(
             },
             {
                 $addFields: {
-                    "self-assessment": {
+                    "selfAssessment": {
                         $filter: {
                             input: "$assessments",
                             as: "assessment",
@@ -318,7 +321,7 @@ const getUsers = asyncHandler(
                              }
                         }
                     },
-                    "manager-assessment": {
+                    "managerAssessment": {
                         $filter: {
                             input: "$assessments",
                             as: "assessment",

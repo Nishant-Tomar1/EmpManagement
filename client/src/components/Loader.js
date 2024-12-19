@@ -1,9 +1,13 @@
 import React from 'react'
-import { Spinner } from 'flowbite-react'
+import { Spinner , DarkThemeToggle, Flowbite} from 'flowbite-react'
 
 function Loader({size="lg", color="info"}) {
   return (
-    <Spinner aria-label="Medium sized spinner example" size={size || "lg"} color={color}/>
+    <div >
+      <Flowbite>
+        <Spinner aria-label="Medium sized spinner example" size={size || "lg"} light="on" color={color}/>
+      </Flowbite>
+    </div>
   )
 }
 

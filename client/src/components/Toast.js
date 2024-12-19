@@ -13,9 +13,9 @@ function Toast() {
 
     return (
     
-    <div className={`flex flex-col justify-center items-center ${theme}`}>
+    <div className={`flex flex-col justify-center items-center ${theme} `}>
         {alertCtx.toast.visible &&
-        <div className='fixed top-4 lg:top-4 z-10'>
+        <div className='fixed top-4 lg:top-4 z-[100]'>
         {  alertCtx.toast.type === "success" &&
             <div id="toast-success" className="flex items-center w-full max-w-xs p-4 mb-4 border-2 border-green-500 dark:border-gray-400 dark:border-2 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
             <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
@@ -87,17 +87,17 @@ function Toast() {
         </div>}
 
         {alertCtx.confirmState.isOpen && 
-        <div className='fixed top-4  z-10'>
-            <div id="toast-interactive" className="flex items-center w-full max-w-[92vw] lg:max-w-[540px] p-4 border-2 border-orange-400 dark:border-gray-400 dark:border-2 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+        <div className='fixed top-4  z-[100]'>
+            <div id="toast-interactive" className="flex items-center w-full max-w-[92vw] lg:max-w-[540px] p-4 border-2 border-orange-400 dark:border-gray-200 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-[#222222]" role="alert">
                 <div className="flex">
-                    <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-400 bg-gray-100 rounded-lg dark:text-blue-300 dark:bg-green-600">
+                    <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-400 bg-gray-100 rounded-lg dark:text-gray-200 dark:bg-gray-600">
                         <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
                         </svg>
                         <span className="sr-only">Refresh icon</span>
                     </div>
                     <div className="ms-4 me-3 text-sm font-normal">
-                        <div className="mb-2 text-center text-lg font-normal text-gray-800 dark:text-gray-100">{alertCtx.confirmState.message}</div> 
+                        <div className="mb-2 text-center text-md font-normal text-gray-800 dark:text-gray-100">{alertCtx.confirmState.message}</div> 
                         <div className="grid grid-cols-2 gap-2 ">
                             <div>
                                 <button onClick={()=>{alertCtx.handleConfirm()}} className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-2 focus:outline-none focus:ring-orange-200 dark:bg-orange-500 dark:hover:bg-orange-600 dark:focus:ring-orange-800">Yes</button>
@@ -107,7 +107,7 @@ function Toast() {
                             </div>
                         </div>    
                     </div>
-                    <button type="button" onClick={ () => alertCtx.hideConfirm()} className="ms-auto -mx-1.5 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-interactive" aria-label="Close">
+                    <button type="button" onClick={ () => alertCtx.hideConfirm()} className="ms-auto -mx-1.5 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-300 dark:hover:text-white dark:bg-[#222222] dark:hover:bg-[#232323]" data-dismiss-target="#toast-interactive" aria-label="Close">
                         <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                         </svg>

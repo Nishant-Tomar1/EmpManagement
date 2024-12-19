@@ -14,6 +14,7 @@ import SelfAssessment from "./pages/SelfAssessment.js";
 import ChangePassword from "./pages/ChangePassword.js";
 import EmployeeAssessment from "./pages/EmployeeAssessment.js";
 import EmpSelf from "./pages/EmpSelf.js";
+import AssessmentReport from "./pages/AssessmentReport.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -32,13 +33,14 @@ function App() {
         withCredentials:true
       })
       if (res.status ===200){
-        console.log("user auto loggedIn");
         const user = res?.data?.data;
         loginCtx.login(user?._id, user?.name,user?.role, user?.token );
         setLoading(false);
       }
+      
     } catch (error) {
       setLoading(false);
+      // console.log(error);
       console.log(extractErrorMessage(error?.response?.data)); 
       navigate("/auth") 
     }
@@ -56,10 +58,12 @@ function App() {
       <Routes path="/" element={<Layout/>}>
           <Route path="/" element={<HomePage/>} />
           <Route path="/auth" element={<Auth/>} />
+          <Route path="/register" element={<Auth/>} />
           <Route path="/forgotpassword" element={<ForgotPassword/>} />
           <Route path="/self-assessment/:userId" element={<SelfAssessment/>}/>
           <Route path="/emp-assessment/:userId" element={<EmployeeAssessment/>}/>
           <Route path="/emp-self" element={<EmpSelf/>}/>
+          <Route path="/report/:userId" element={<AssessmentReport/>}/>
           <Route path="/change-password" element={<ChangePassword/>} />
           <Route path="*" element={<NotFound/>}/>
       </Routes>

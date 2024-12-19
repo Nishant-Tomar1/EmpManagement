@@ -5,10 +5,15 @@ import axios from 'axios'
 import { extractErrorMessage, Server } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import logo from "../assets/logos/logo.png"
+import Loader from './Loader';
+import { FaRegEye,FaRegEyeSlash } from 'react-icons/fa';
 
 function Login() {
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
+        name : "",
         email : "",
         password : ""
     })
@@ -29,6 +34,7 @@ function Login() {
         setLoading(true);
         try {
             const res = await axios.post(`${Server}/users/login`,{
+              name : user.name,
               email : user.email,
               password : user.password
             });
@@ -42,23 +48,90 @@ function Login() {
         } catch (error) {
             alertCtx.setToast("error", extractErrorMessage(error?.response?.data));    
             setLoading(false)
-            // console.log(extractErrorMessage(error?.response?.data));
+            console.log(error);
           }
     }
-  return (
-  <div className="container mx-auto px-4 py-8 flex justify-center items-center h-screen">
-    <form action="" onSubmit={handleSumbit} className="bg-gray-200 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
-      <div className='w-full text-3xl text-center'>Login</div>
-      <label htmlFor="">Email</label>
-      <input type="text" value={user.email} name="email" onChange={handleUserChange} className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50" />
-      <label htmlFor="">Password</label>
-      <input type="text" value={user.password} name="password" onChange={handleUserChange} className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50" />
-      <button type="submit" className="w-full px-4 py-2 bg-green-400 text-white font-bold rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400 focus:ring-opacity-50">
-        {loading ? "loading..." : "Login"}
-      </button>
-    <Link to="/forgotpassword" className="text-blue-500 hover:underline">Forgot Password?</Link>
-    </form>
-</div>
+    return (
+
+    <div className="flex flex-col text-gray-700 md:flex-row min-h-screen">
+          {/* Left Section */}
+          <div className="md:flex-1 min-h-[50vh] bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col justify-center items-center p-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center">We are more than just a company</h1>
+            <p className="text-center text-gray-400 max-w-md">
+              “Feed a man, clothe him, give him decent quarters to live and you'll find a man with self-respect, ready to contribute and become a productive human being.”
+            </p>
+          </div>
+
+          {/* Right Section */}
+          <div className="md:flex-1 bg-white flex flex-col justify-center items-center p-8">
+            <div className="flex flex-col items-center w-full max-w-md">
+              <div className="text-6xl font-bold mb-6"><img src={logo} alt="" className='w-20 md:w-24' /></div>
+              <h2 className="text-xl md:text-2xl font-semibold mb-2 text-center text-gray-700">Employee Assessment</h2>
+              <p className="text-gray-600 mb-2 text-center">Please login to your account</p>
+
+              <form onSubmit={handleSumbit} className="w-full px-4 space-y-2">
+              <div>
+                  <label className="block text-sm font-medium text-gray-700" htmlFor="name">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="email"
+                    name = "name"
+                    onChange = {handleUserChange}
+                    value={user.name}
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your Name"
+                  />
+                </div>
+
+                <div className='flex font-semibold w-full text-center items-center justify-center'>OR</div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name = "email"
+                    value={user.email}
+                    onChange = {handleUserChange}
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your Email"
+                  />
+                </div>
+
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
+                    Password*
+                  </label>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={user.password}
+                      onChange={handleUserChange}
+                      className="w-full mb-4 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-4 right-1 px-3 py-5 text-lg text-gray-600 focus:outline-none"
+                    >
+                      {showPassword ? <FaRegEye/> : <FaRegEyeSlash/>}
+                    </button>
+                  </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1"
+                >
+                  {loading ? <Loader size='md' color='success'/> : "Login"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
   )
 }
 
