@@ -65,13 +65,13 @@ function Login() {
           {/* Right Section */}
           <div className="md:flex-1 bg-white flex flex-col justify-center items-center p-8">
             <div className="flex flex-col items-center w-full max-w-md">
-              <div className="text-6xl font-bold mb-6"><img src={logo} alt="" className='w-20 md:w-24' /></div>
-              <h2 className="text-xl md:text-2xl font-semibold mb-2 text-center text-gray-700">Employee Assessment</h2>
-              <p className="text-gray-600 mb-2 text-center">Please login to your account</p>
+              <div className="text-6xl font-bold mb-4"><img src={logo} alt="" className='w-20 md:w-24' /></div>
+              <h2 className="text-xl md:text-xl font-bold mb-2 text-center text-gray-700">Employee Assessment</h2>
+              {/* <p className="text-gray-600 mb-2 text-center">Please login to your account</p> */}
 
               <form onSubmit={handleSumbit} className="w-full px-4 space-y-2">
               <div>
-                  <label className="block text-sm font-medium text-gray-700" htmlFor="name">
+                  <label className="block text-xs font-medium text-gray-700" htmlFor="name">
                     Name
                   </label>
                   <input
@@ -87,7 +87,7 @@ function Login() {
 
                 <div className='flex font-semibold w-full text-center items-center justify-center'>OR</div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">
+                  <label className="block text-xs font-medium text-gray-700 mb-1" htmlFor="email">
                     Email
                   </label>
                   <input
@@ -102,7 +102,7 @@ function Login() {
                 </div>
 
                 <div className="relative">
-                  <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="password">
+                  <label className="block text-xs font-medium text-gray-700 mb-1" htmlFor="password">
                     Password*
                   </label>
                     <input
@@ -110,16 +110,17 @@ function Login() {
                       name="password"
                       value={user.password}
                       onChange={handleUserChange}
-                      className="w-full mb-4 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-4 right-1 px-3 py-5 text-lg text-gray-600 focus:outline-none"
+                      className="absolute  right-1 px-3 py-3 text-lg text-gray-600 focus:outline-none"
                     >
                       {showPassword ? <FaRegEye/> : <FaRegEyeSlash/>}
                     </button>
+                      <Link to="/forgotpassword" className='text-sm mb-4 text-blue-500 cursor-pointer hover:underline'> Forgot Password ?</Link>
                   </div>
 
                 <button
