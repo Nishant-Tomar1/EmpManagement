@@ -230,6 +230,7 @@ function EmployeeAssessment() {
         // console.log(res);
         
         if (res?.data?.statusCode === 201) {
+          setAssessmentId(res?.data?.data?._id)
           setStatus(res?.data?.data?.status)
           return alertCtx.setToast("success","Saved Successfully");
         }
@@ -241,6 +242,8 @@ function EmployeeAssessment() {
           status : status || "finished",
           score : score
         },{withCredentials:true});
+        // console.log(res);
+        
 
         if (res?.data?.statusCode === 200) {
           setStatus(res?.data?.data?.status)
@@ -394,7 +397,7 @@ function EmployeeAssessment() {
                                     onClick={() => {
                                         handleRatingChange(EmpQuestions[active].category, sub.subcategory, index + 1);
                                     }}
-                                    className="w-4 h-4 accent-blue-600 dark:bg-gray-700"
+                                    className="w-4 h-4 accent-blue-600 dark:bg-[#232323] dark:text-teal-500 dark:accent-teal-500 dark:focus:ring-teal-500"
                                     />
                                 <label 
                                     htmlFor={`${EmpQuestions[active].category}-${sub.subcategory}-${index}`} 
@@ -422,8 +425,8 @@ function EmployeeAssessment() {
                     </div>
                   ))}
 
-                  {/* Score */}
-                  <div className="flex justify-center space-x-4 mt-4 font-bold text-blue-800 dark:text-blue-600">
+                     {/* Score */}
+                     <div className="flex justify-center space-x-4 mt-4 font-bold text-blue-800 dark:text-teal-400">
                     {EmpQuestions[active].category.toLocaleUpperCase()} SCORE : {getScore(EmpQuestions[active].category)}/20
                    </div>
 
@@ -439,7 +442,7 @@ function EmployeeAssessment() {
                     )}
                     {(active < (EmpQuestions.length - 1)) && (
                       <button 
-                        className="bg-blue-500 dark:bg-blue-600 text-white rounded-lg px-4 py-2 dark:hover:bg-blue-700 hover:bg-blue-600 transition-colors duration-300" 
+                        className="bg-blue-500 dark:bg-teal-400 text-white rounded-lg px-4 py-2 dark:hover:bg-teal-600 hover:bg-blue-600 transition-colors duration-300" 
                         onClick={() => { handleSave(status || "in-progress").then(()=>{setActive(prev=>prev+1)}) }}
                       >
                         {verified && "Save and"} Next
@@ -448,7 +451,7 @@ function EmployeeAssessment() {
                     {(active === (EmpQuestions.length - 1)) && (
                       <button 
                         onClick={() => {handleSave(status || "in-progress") }}
-                        className="bg-blue-500 dark:bg-blue dark:hover:bg-blue-700 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300" 
+                        className="bg-blue-500 dark:bg-teal-500 dark:hover:bg-teal-600 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300" 
                       >
                         Save
                       </button>
@@ -461,10 +464,10 @@ function EmployeeAssessment() {
                         Submit
                       </button>
                     )}
-                    
-                   
-                   
                   </div>}
+
+                 
+
                 </div>
 
               </div>

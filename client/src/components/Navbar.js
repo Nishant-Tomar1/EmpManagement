@@ -56,27 +56,29 @@ export default function Navbar() {
       </div>
       <div>
       <div className="flex gap-5">
-        <button onClick={()=>{themeCtx.toggleTheme()}} className="text-2xl p-1 px-4 hover:scale-105 rounded-full"> {themeCtx.theme === "light" ? <LuSun/> : <PiMoonStarsFill/>}</button>
-        <button onClick={()=>{setOpen(prev=>!prev)}} id="dropdownDividerButton" data-dropdown-toggle="dropdownDivider" className="mt-1 text-black focus:outline-none border-1 bg-gray-200 hover:bg-gray-300 border-gray-400 dark:bg-[#151515] dark:hover:bg-[#252525] dark:text-gray-300 dark:border-gray-200 dark:border  font-semibold rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center gap-2 mb-2" type="button"><span><FaUserLarge/></span>{loginCtx.name}
-          {open ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
-        </button>
-        <div id="dropdownDivider" className={`z-10 ${open ?"block" : "hidden"} bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-44 dark:bg-[#232323] dark:divide-gray-600 z-10 fixed top-14 right-6`}>
-            <ul onClick={()=>{setOpen(false)}} className="text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
-              <li>
-                <Link to="/" className="block px-4 py-2 hover:bg-gray-100 rounded-t-md dark:hover:bg-[#333333] dark:hover:text-white">Dashboard</Link>
-              </li>
-              <li>
-                <Link to="/change-password" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Change Password</Link>
-              </li>
-              {(loginCtx.role === "admin") && <li>
-                <Link to="/register" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Add new User</Link>
-              </li>}
-              {(loginCtx.role==="user")&&<li>
-                <Link to={`/self-assessment`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Self-assessment </Link>
-              </li>}
-            </ul>
-            <div className="py-2 bg-red-600 rounded-b-md hover:bg-red-700">
-              <button onClick={()=>{alertCtx.showConfirm("Do you really want to logout of your account?",handlelogout);setOpen(false);}} className="block px-4 text-md w-full font-semibold text-white ">{!loading ? "Sign Out" : "Loading.."}</button>
+        <button title="Toggle theme" onClick={()=>{themeCtx.toggleTheme()}} className="text-2xl p-1 lg:px-4 hover:scale-105 rounded-full"> {themeCtx.theme === "light" ? <LuSun/> : <PiMoonStarsFill/>}</button>
+        <div className="flex flex-col justify-center items-center">
+            <button onClick={()=>{setOpen(prev=>!prev)}} id="dropdownDividerButton" data-dropdown-toggle="dropdownDivider" className="flex justify-center items-center mt-1 text-black focus:outline-none border-1 bg-gray-200 hover:bg-gray-300 border-gray-400 dark:bg-[#151515] dark:hover:bg-[#252525] dark:text-gray-300 dark:border-gray-200 dark:border  font-semibold rounded-lg text-sm px-5 py-2.5 text-center gap-2 mb-2" type="button"><span><FaUserLarge/></span>{loginCtx.name}
+              {open ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+            </button>
+            <div id="dropdownDivider" className={`z-10 ${open ?"block" : "hidden"} bg-white divide-y divide-gray-100 rounded-lg shadow-lg dark:bg-[#232323] dark:divide-gray-600 fixed top-14`}>
+                <ul onClick={()=>{setOpen(false)}} className="text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
+                  <li>
+                    <Link to="/" className="block px-4 py-2 hover:bg-gray-100 rounded-t-md dark:hover:bg-[#333333] dark:hover:text-white">Dashboard</Link>
+                  </li>
+                  <li>
+                    <Link to="/change-password" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Change Password</Link>
+                  </li>
+                  {(loginCtx.role === "admin") && <li>
+                    <Link to="/register" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Add new User</Link>
+                  </li>}
+                  {(loginCtx.role==="user")&&<li>
+                    <Link to={`/self-assessment/${loginCtx.userId}`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Self-assessment </Link>
+                  </li>}
+                </ul>
+                <div className="py-2 bg-red-600 rounded-b-md hover:bg-red-700">
+                  <button onClick={()=>{alertCtx.showConfirm("Do you really want to logout of your account?",handlelogout);setOpen(false);}} className="block px-4 text-md w-full font-semibold text-white ">{!loading ? "Sign Out" : "Loading.."}</button>
+                </div>
             </div>
         </div>
         </div>

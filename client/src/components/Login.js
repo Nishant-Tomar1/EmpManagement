@@ -76,7 +76,7 @@ function Login() {
                   </label>
                   <input
                     type="text"
-                    id="email"
+                    id="name"
                     name = "name"
                     onChange = {handleUserChange}
                     value={user.name}

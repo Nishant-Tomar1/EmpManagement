@@ -152,7 +152,7 @@ function AssessmentReport() {
                     <div className='font-bold text-2xl'>Name : {user?.name}</div>
                     <div className='mb-2 font-medium'>Designation : {user?.designation}</div>
                     
-                    <button className='p-3 px-4 bg-green-500 hover:bg-green-600 rounded-xl text-gray-100 font-semibold shadow-lg' onClick={downloadTableAsPDF}>Download report as PDF</button>
+                    <button className='p-2 px-4 bg-green-500 hover:bg-green-600 dark:bg-teal-500 dark:hover:bg-teal-600 rounded-xl text-gray-100 font-semibold shadow-lg' onClick={downloadTableAsPDF}>Download report as PDF</button>
                      
                     {/* table */}
                     <div className="mx-2 my-6 mb-8 xl:mx-16 overflow-x-auto max-w-[95vw]">
@@ -198,19 +198,19 @@ function AssessmentReport() {
 
                     {/* bar graphs */}
                     <div id="graphs" className='w-full p-2 lg:w-2/3 2xl:w-1/2'>
-                        <img src={image} className='w-100 mb-10' alt="" />
+                        <img src={image} className='w-100 mb-8' alt="" />
                       {(user?.selfAssessment?.length > 0) &&
                           <>
-                                <div className='z-10 mb-6 text-center w-full font-bold text-lg md:text-2xl text-gray-800 dark:text-gray-200'>According to {user?.name} : <span className={`text-${getRank(user?.selfAssessment[0].score)[1]}`}> {getRank(user?.selfAssessment[0]?.score)[0] || ""} </span></div>
+                                <div className='z-10 mb-4 text-center w-full font-semibold text-lg md:text-2xl text-gray-800 dark:text-gray-400'>According to {user?.name} : <span className={`text-${getRank(user?.selfAssessment[0].score)[1]}`}> {getRank(user?.selfAssessment[0]?.score)[0] || ""} </span></div>
                                 <BarGraph users={[user]} title="selfAssessment" twoD={true}/>
-                                <br />
+                                
                           </>
                         }
                       {
                       (user?.managerAssessment?.length > 0 ) &&
                         <>
                           <br />
-                          <div className='z-10 mb-6 text-center w-full font-bold text-lg md:text-2xl text-gray-800 dark:text-gray-100'>According to manager :<span className={`text-${getRank(user?.managerAssessment[0].score)[1]}`}> {getRank(user?.managerAssessment[0]?.score)[0] || ""} </span></div>
+                          <div className='z-10 mb-4 text-center w-full font-semibold text-lg md:text-2xl text-gray-800 dark:text-gray-400'>According to manager :<span className={`text-${getRank(user?.managerAssessment[0].score)[1]}`}> {getRank(user?.managerAssessment[0]?.score)[0] || ""} </span></div>
                           <BarGraph users={[user]} title="managerAssessment" twoD={true}/>
                         
                         </>
@@ -219,7 +219,7 @@ function AssessmentReport() {
                 </>
               :
               <>
-              <div className="flex text-black w-full min-h-[80vh] justify-center items-center">
+              <div className="flex text-black dark:text-gray-100 w-full min-h-[80vh] justify-center items-center">
                     You are not authorized to access this page!
                   </div>
               </>
@@ -227,7 +227,7 @@ function AssessmentReport() {
         </div>
         :
         <>
-        <div className="flex text-black w-full min-h-[80vh] justify-center items-center">
+        <div className="flex text-black dark:text-gray-100 w-full min-h-[80vh] justify-center items-center">
                     Loading....
                   </div>
         </>

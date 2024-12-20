@@ -182,7 +182,7 @@ function EmployeeReport({batches}) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        {userData.map((user,index) => ((user?.batch === batch) && (filterUsers(user, search[batch] || "" )) && (getUserStatus(user)===active) && <tr key={index} className="bg-white text-sm dark:bg-[#323232] hover:bg-gray-50 dark:hover:bg-[#292929]">
+                                        {userData.map((user,index) => ((user?.batch === batch) && (filterUsers(user, search[batch] || "" )) && (getUserStatus(user)===active) && <tr key={index} className="bg-white text-sm dark:bg-[#292929] hover:bg-gray-50 dark:hover:bg-[#292929]">
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
                                                         <input id="checkbox-table-search-1" onClick={()=>{handleSelection(user._id)}} type="checkbox" defaultChecked={selected.includes(user._id)} className="w-4 h-4 text-blue-600 dark:text-gray-400 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-gray-300 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-300"/>
@@ -218,7 +218,7 @@ function EmployeeReport({batches}) {
                                 }
                             </>
                             :
-                            <div className='flex w-full min-h-36 justify-center items-center dark:bg-[#252525]'>
+                            <div className='flex w-full min-h-36 justify-center items-center dark:bg-[#202020]'>
                                 {fetching.includes(key) && <Loader color={active==="pending" ? "warning" :'success'} size='lg'/>}
                             </div>
                             }

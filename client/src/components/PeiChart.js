@@ -1,12 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts, { color } from 'highcharts';
 import HighCharts3d from "highcharts/highcharts-3d";
 import {Exporting} from "highcharts/modules/exporting";
 import {ExportData }from "highcharts/modules/export-data"; 
 import {OfflineExporting} from "highcharts/modules/offline-exporting";
+import { useTheme } from '../store/contexts/ThemeContextProvider';
 
 function PeiChart({score}) {
+    const [graphTheme, setGraphTheme] = useState({
+      backgroundColor : "#ffffff",
+      textColor : "#000000"
+    })
+
+    const themeCtx = useTheme();
     const getScore = (category)=>{
         let sum = 0;
         for (let data in score[category]){
@@ -37,24 +44,23 @@ function PeiChart({score}) {
         }
         return data;
     }
-    const getDynamicStyles = () => {
-        const container = document.getElementById("pie-chart-container");
-        if (container) {
-          const styles = getComputedStyle(container);
-        //   console.log(styles.backgroundColor, styles.color);
-          
-          return {
-            backgroundColor: styles.backgroundColor,
-            textColor: styles.color,
-          };
-        }
-        return {
-          backgroundColor: "#ffffff", 
-          textColor: "#000000", 
-        };
-      };
-    
-    const { backgroundColor, textColor } = getDynamicStyles();
+     const getDynamicStyles = () => {
+                const container = document.getElementById("pie-chart-container");
+                if (container) {
+                  const styles = getComputedStyle(container);
+                  
+                    setGraphTheme(prev => ({
+                      ...prev,
+                      backgroundColor: styles.backgroundColor,
+                      textColor : styles.color
+                    }))
+                  return;
+                }
+              }; 
+              
+    useEffect(()=>{
+            getDynamicStyles();
+        },[themeCtx.theme,score])
 
     const options = {
         chart: {
@@ -64,7 +70,7 @@ function PeiChart({score}) {
             alpha: 45,
             beta: 0,
           },
-          backgroundColor: backgroundColor, 
+          backgroundColor: graphTheme.backgroundColor, 
         },
         credits: {
           enabled: false,
@@ -72,8 +78,8 @@ function PeiChart({score}) {
         title: {
           text: "Assessment Report",
           style: {
-            color: textColor,
-            backgroundColor: backgroundColor, 
+            color: graphTheme.textColor,
+            backgroundColor: graphTheme.backgroundColor, 
           },
         },
         accessibility: {
@@ -88,8 +94,8 @@ function PeiChart({score}) {
               enabled: true,
               format: "{point.name}",
               style: {
-                color: textColor, // Dynamic text color for data labels
-                backgroundColor: backgroundColor, // Optional: Background for data labels
+                color: graphTheme.textColor,
+                backgroundColor: graphTheme.backgroundColor, 
               },
             },
           },
@@ -112,14 +118,13 @@ function PeiChart({score}) {
           },
         ],
       };
-      
-      
+         
 
   return (
     <div className='flex flex-col xl:flex-row w-full '>
         <div className='flex flex-co xl:w-1/2 items-center justify-center'>
         <div id="pie-chart-container"
-    className="dark:bg-[#191919] bg-white dark:text-gray-100 text-gray-700">
+    className="dark:bg-[#191919] bg-white dark:text-gray-100 text-gray-700 w-full max-w-[100vw] overflow-auto">
             <HighchartsReact
             highcharts={Highcharts}
             options={options}/>
@@ -129,7 +134,7 @@ function PeiChart({score}) {
         <div className='flex flex-col w-full sm:w-[90%] xl:w-half items-center justify-center'>
             <label className='font-semibold text-xl' htmlFor="">Assessment Score</label>
 
-                <table className="xl:w-[80%] my-6 px-1 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <table className="w-[70%] my-6 px-1 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-center text-gray-700 uppercase bg-indigo-200 dark:bg-[#353535] dark:text-gray-100">
                         <tr>
                             <th scope="col" className="px-6 py-3 font-bold">
@@ -147,13 +152,13 @@ function PeiChart({score}) {
                         {
                             getData(score, false).map((data, index)=>(
                                 <tr key={index} className="bg-white text-center border-b dark:bg-[#212121] dark:border-gray-700">
-                            <th scope="row" className="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                            <th scope="row" className="px-6 py-3 font-bold text-gray-900 dark:text-white">
                                 {index+1}
                             </th>
-                            <th scope="row" className="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                            <th scope="row" className="px-6 py-3 font-bold text-gray-900 dark:text-white">
                                 {data[0]}
                             </th>
-                            <td className="px-6 py-4 font-medium text-center">
+                            <td className="px-6 py-3 font-medium text-center">
                                 {data[1]}
                             </td>
                         </tr>

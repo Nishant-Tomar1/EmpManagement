@@ -175,7 +175,7 @@ function SelfAssessment() {
           const fetchedScore = res?.data?.data[0]?.score;
           if (fetchedScore) setScore(fetchedScore);
           setStatus(res?.data?.data[0]?.status);
-          
+     
       }
       
     } catch (error) {
@@ -229,8 +229,13 @@ function SelfAssessment() {
           status : statusgiven,
           score : score
         },{withCredentials:true});
-        console.log(res);
-        if (res?.data?.statusCode === 201) return alertCtx.setToast("success","Saved Successfully")
+        // console.log(res);
+        if (res?.data?.statusCode === 201){
+          setStatus(res?.data?.data?.status);
+          setAssessmentId(res?.data?.data?._id)
+          alertCtx.setToast("success","Saved Successfully")
+          return
+        }
       }
       else{
         const res = await axios.patch(`${Server}/assessments/update`,{
@@ -248,7 +253,6 @@ function SelfAssessment() {
       
     } catch (error) {
       console.log(error);
-      
       alertCtx.setToast("error","Something went wrong while saving the data.")
     }
   }
@@ -394,6 +398,10 @@ function SelfAssessment() {
                     </div>
                   ))}
 
+                  {/* Score */}
+                  <div className="flex justify-center items-center space-x-4 my-2 font-bold text-blue-800 dark:text-teal-400">
+                    {selfQuestions[active].category.toLocaleUpperCase()} SCORE : {getScore(selfQuestions[active].category)}/20
+                   </div>
                   
 
                  { (status!=="finished") &&(editAccess)&& <div className="flex justify-center space-x-4 mt-4">
@@ -408,7 +416,7 @@ function SelfAssessment() {
                     )}
                     {(active < (selfQuestions.length - 1)) && (
                       <button 
-                        className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300" 
+                        className="bg-blue-500 dark:bg-teal-500 dark:hover:bg-teal-600  text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300" 
                         onClick={() => { handleSave("in-progress").then(()=>{setActive(prev => prev + 1);}) }}
                       >
                         Save & Next
@@ -417,7 +425,7 @@ function SelfAssessment() {
                     {(active === (selfQuestions.length - 1)) && (
                       <button 
                         onClick={() => {handleSave("in-progress") }}
-                        className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300" 
+                        className="bg-blue-500 dark:bg-teal-500 dark:hover:bg-teal-600  text-white rounded-lg px-4 py-2 hover:bg-blue-600 transition-colors duration-300" 
                       >
                         Save
                       </button>
@@ -435,9 +443,7 @@ function SelfAssessment() {
                    
                   </div>}
 
-                  <div className="flex justify-center items-center space-x-4 my-2 font-bold text-blue-800 dark:text-blue-600">
-                    {selfQuestions[active].category.toLocaleUpperCase()} SCORE : {getScore(selfQuestions[active].category)}/20
-                   </div>
+                  
                 </div>
               </div>
               :

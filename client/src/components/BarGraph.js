@@ -7,9 +7,17 @@ import {Exporting} from "highcharts/modules/exporting";
 import {ExportData }from "highcharts/modules/export-data"; 
 import {OfflineExporting} from "highcharts/modules/offline-exporting";
 import { MdDragIndicator } from 'react-icons/md';
+import { useTheme } from '../store/contexts/ThemeContextProvider';
 
 
 function BarGraph({users, title, twoD = false }) {
+    const [graphTheme, setGraphTheme] = useState({
+      backgroundColor : "#ffffff",
+      textColor : "#000000"
+    })
+
+    const themeCtx = useTheme();
+
     const getScore = (category,score )=>{
             let sum = 0;
             for (let data in score[category]){
@@ -55,98 +63,96 @@ function BarGraph({users, title, twoD = false }) {
             const container = document.getElementById("chart-container");
             if (container) {
               const styles = getComputedStyle(container);
-            //   console.log(styles.backgroundColor, styles.color);
               
-              return {
-                backgroundColor: styles.backgroundColor,
-                textColor: styles.color,
-              };
+                setGraphTheme(prev => ({
+                  ...prev,
+                  backgroundColor: styles.backgroundColor,
+                  textColor : styles.color
+                }))
+              return;
             }
-            return {
-              backgroundColor: "#ffffff", 
-              textColor: "#000000", 
-            };
-          };
-        
-    const { backgroundColor, textColor } = getDynamicStyles();
-        
+          }; 
+          
+    useEffect(()=>{
+            getDynamicStyles();
+    },[themeCtx.theme,users])
+          
     const options = {
-            chart: {
-              type: "column",
-              options3d: {
-                enabled: !twoD,
-                alpha: 10,
-                beta: 25,
-                depth: 70,
-              },
-              backgroundColor: backgroundColor,
-            },
-            title: {
-              text: !twoD ? (title === "managerAssessment" ? "Manager - Assessment" : "Self - Assessment") : "",
-              style: {
-                color: textColor, 
-              },
-            },
-            credits: {
-              enabled: false,
-            },
-            plotOptions: {
-              column: {
-                depth: 25,
-              },
-            },
-            accessibility: {
-              enabled: false,
-            },
-            dataLabels : {
-                style :{ 
-                    color : textColor
-                }
-            },
-            legend: {
-                itemStyle: {
-                  color: textColor, 
-                },
-                backgroundColor: backgroundColor, 
-              },
-            xAxis: {
-              type: "category",
-              labels: {
-                skew3d: true,
-                style: {
-                  fontSize: "16px",
-                  color: textColor, 
-                },
-              },
-            },
-            yAxis: {
-              title: {
-                text: "Score",
-                margin: 20,
-                style: {
-                  color: textColor, 
-                },
-              },
-              labels: {
-                style: {
-                  color: textColor, 
-                },
-              },
-              gridLineColor: "#444444", 
-            },
-            exporting: {
-              buttons: {
-                contextButton: {
-                  align: "right",
-                  verticalAlign: "top",
-                  x: -5,
-                  y: 5,
-                },
-              },
-            },
-            series: getData(),
-          };
-        
+                  chart: {
+                    type: "column",
+                    options3d: {
+                      enabled: !twoD,
+                      alpha: 10,
+                      beta: 25,
+                      depth: 70,
+                    },
+                    backgroundColor: graphTheme.backgroundColor,
+                  },
+                  title: {
+                    text: !twoD ? (title === "managerAssessment" ? "Manager - Assessment" : "Self - Assessment") : "",
+                    style: {
+                      color: graphTheme.textColor, 
+                    },
+                  },
+                  credits: {
+                    enabled: false,
+                  },
+                  plotOptions: {
+                    column: {
+                      depth: 25,
+                    },
+                  },
+                  accessibility: {
+                    enabled: false,
+                  },
+                  dataLabels : {
+                      style :{ 
+                          color : graphTheme.textColor
+                      }
+                  },
+                  legend: {
+                      itemStyle: {
+                        color: graphTheme.textColor, 
+                      },
+                      backgroundColor: graphTheme.backgroundColor, 
+                    },
+                  xAxis: {
+                    type: "category",
+                    labels: {
+                      skew3d: true,
+                      style: {
+                        fontSize: "16px",
+                        color: graphTheme.textColor, 
+                      },
+                    },
+                  },
+                  yAxis: {
+                    title: {
+                      text: "Score",
+                      margin: 20,
+                      style: {
+                        color: graphTheme.textColor, 
+                      },
+                    },
+                    labels: {
+                      style: {
+                        color: graphTheme.textColor, 
+                      },
+                    },
+                    gridLineColor: "#444444", 
+                  },
+                  exporting: {
+                    buttons: {
+                      contextButton: {
+                        align: "right",
+                        verticalAlign: "top",
+                        x: -5,
+                        y: 5,
+                      },
+                    },
+                  },
+                  series: getData(),
+              };
   return (
     <div >
 
