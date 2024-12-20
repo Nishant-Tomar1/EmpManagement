@@ -144,7 +144,7 @@ function AssessmentReport() {
 
   return (
     <>
-      <div className='flex text-start cursor-pointer text-2xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
+      <div className='flex text-start cursor-pointer text-xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
       {!loading ? 
                 <div className='flex flex-col justify-center items-center overflow-auto'>
                 { (user?.managerId === loginCtx.userId ) ?

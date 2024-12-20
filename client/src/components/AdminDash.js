@@ -129,7 +129,7 @@ function EmployeeReport({batches}) {
             {batches.map((batch, key)=>(
                 <div key={key}> 
                     <button onClick={()=>{openHandler(key, batch)}} id="dropdownDividerButton" data-dropdown-toggle="dropdownDivider" className={`w-full my-1 focus:outline-none border border-gray-300 font-medium rounded-lg text-md px-5 py-2.5 text-center inline-flex items-center justify-between shadow-md  `} type="button">
-                    <span className={`font-semibold text-md text-${active==="pending" ? "orange-500" : "green-500"}`}>Batch : {batch} | Status : {active} </span>
+                    <span className={`font-semibold text-md text-${active==="pending" ? "orange-500" : "green-500"}`}>Batch : {batch.toUpperCase()} | Status : {active} </span>
                     <span className=''> {(open.includes(key)) ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>} </span>
                     </button>
 
@@ -185,7 +185,8 @@ function EmployeeReport({batches}) {
                                         {userData.map((user,index) => ((user?.batch === batch) && (filterUsers(user, search[batch] || "" )) && (getUserStatus(user)===active) && <tr key={index} className="bg-white text-sm dark:bg-[#292929] hover:bg-gray-50 dark:hover:bg-[#292929]">
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
-                                                        <input id="checkbox-table-search-1" onClick={()=>{handleSelection(user._id)}} type="checkbox" defaultChecked={selected.includes(user._id)} className="w-4 h-4 text-blue-600 dark:text-gray-400 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-gray-300 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-300"/>
+                                                        <input id="checkbox-table-search-1" onClick={()=>{handleSelection(user._id)}} type="checkbox" defaultChecked={selected.includes(user._id)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-gray-300 
+                                                        dark:text-teal-500 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-300"/>
                                                         <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
                                                     </div>
                                                 </td>

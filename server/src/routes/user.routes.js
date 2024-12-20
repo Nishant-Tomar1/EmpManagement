@@ -12,7 +12,7 @@ import {
     getUsers,
     getCurrentUser,
     deleteUser,
-    getBatchesUndergivenManager
+    getBatches
 }
 from "../controllers/user.controller.js"
 import { sendEmailHandler } from '../controllers/email.controller.js';
@@ -37,7 +37,7 @@ router.route("/logout").post(verifyJWT, logoutUser);
 
 router.route("/get-current-user").get(verifyJWT, getCurrentUser);
 
-router.route("/get-batches-under-manager").get(verifyJWT, getBatchesUndergivenManager )
+router.route("/get-batches").get(verifyJWT, getBatches )
 
 router.route("/change-current-user-password").post( verifyJWT, changeCurrentUserPassword );
 

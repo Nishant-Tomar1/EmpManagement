@@ -290,7 +290,7 @@ function EmployeeAssessment() {
     <>
       {!loading ? (
         <>
-         <div className='flex cursor-pointer text-2xl items-center dark:text-gray-100 font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
+         <div className='flex cursor-pointer text-xl items-center dark:text-gray-100 font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
           {
           verified ? 
           <div className="flex flex-col sm:flex-row w-full bg-whitel">

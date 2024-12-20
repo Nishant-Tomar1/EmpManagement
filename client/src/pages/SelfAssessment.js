@@ -284,7 +284,7 @@ function SelfAssessment() {
     <>
       {!loading ? (
         <>
-          <div className='flex cursor-pointer text-2xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
+          <div className='flex cursor-pointer text-xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
           {verified ? 
  
           <div className="flex flex-col sm:flex-row w-ful bg-whitel">

@@ -43,7 +43,7 @@ export default function Navbar() {
 
   return (
     <>
-    { !(["/auth","/forgotpassword","/register"].includes(pathname))&&(loginCtx.isLoggedIn)&&
+    { !(["/auth","/forgotpassword"].includes(pathname))&&(loginCtx.isLoggedIn)&&
     <div className="shadow-lg dark:shadow-lg dark:shadow-[#090909] flex sticky top-0 bg-white dark:bg-[#151515] dark:text-gray-100 justify-between px-4 p-2 items-center  z-[20]">
       <div onClick={()=>{navigate("/")}} className="cursor-pointer flex items-center">
         

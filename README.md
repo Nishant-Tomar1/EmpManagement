@@ -5,7 +5,7 @@ This repository contains a web-based platform designed for employee assessment a
 ## Features
 
 - **Employee Assessment**: Evaluate employee performance through various metrics.
-- **Data Management**: Store and manage employee information securely.
+- **Data Management and Visualization**: Store, manage, visualize through graphs and download employee information securely.
 - **User Authentication**: Secure login and registration system.
 
 ## Technologies Used
@@ -58,7 +58,7 @@ PORT=8000
 MONGODB_URI=your_mongodb_uri
 CORS_ORIGIN=http://localhost:3000
 TOKEN_SECRET=your_token_secret
-TOKEN_EXPIRY=3d
+TOKEN_EXPIRY=your_token_expiry
 SMTP_HOST=your_smtp_host
 SMTP_PORT=your_smtp_port
 SMTP_MAIL=your_smtp_email
@@ -87,15 +87,11 @@ The application should now be running, with the frontend accessible at `http://l
 
 Detailed API documentation is available through Postman:
 
-[EmpManagement API Documentation](https://documenter.getpostman.com/view/30488668/2sAYHxmiXK)
+[API Documentation](https://documenter.getpostman.com/view/30488668/2sAYHxmiXK)
 
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Contact
 

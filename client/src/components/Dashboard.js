@@ -12,7 +12,7 @@ function Dashboard() {
 
     const fetchBatches =  async()=>{
         try {
-            const res = await axios.get(`${Server}/users/get-batches-under-manager`, {withCredentials :true});
+            const res = await axios.get(`${Server}/users/get-batches`, {withCredentials :true});
             if (res?.data?.statusCode === 200){
                 setBatches(res.data?.data?.batches);
                 setLoading(false);

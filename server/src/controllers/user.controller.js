@@ -98,7 +98,7 @@ const registerUser = asyncHandler(
         throw new ApiError(400, "Manager Id is required for users which are not admin");
     }
 
-    const manId = ((role.toLowerCase() === 'user' ) ? new mongoose.Types.ObjectId(managerId) : null);
+    const manId = ((managerId ) ? new mongoose.Types.ObjectId(managerId) : null);
 
     if (
         [name, email, password, designation, role, batch].some((field) => field?.trim()==="")
@@ -121,7 +121,7 @@ const registerUser = asyncHandler(
         managerId : manId,
         batch : batch.toLowerCase().trim()
     })
-
+    
     const createdUser = await User.findById(user._id).select(
         "-password -token"
     )
@@ -130,10 +130,9 @@ const registerUser = asyncHandler(
         throw new ApiError(500, "Something went wrong during user registration" )
     }
 
-    // return res
-    return res.status(200)
+    return res.status(201)
     .json(
-        new ApiResponse(200, createdUser, "User registered successfully")
+        new ApiResponse(201, createdUser, "User registered successfully")
     )
     
 }
@@ -388,18 +387,24 @@ const getCurrentUser = asyncHandler(
     }
 )
 
-const getBatchesUndergivenManager = asyncHandler(
+const getBatches = asyncHandler(
     async(req, res) => {
+        const {all} = req.query;
+        let query = {};
+
+        if (!all){
+            query.managerId = new mongoose.Types.ObjectId(req.user._id)
+        }
 
         if (req.user.role !== "admin"){
             throw new ApiError(401, "Not authorized. Login as a manager(admin) first.")
         }
 
+        // console.log(query);
+        
         const batches = await User.aggregate([
             {
-                $match: {
-                    managerId: new mongoose.Types.ObjectId(req.user._id)
-                }
+                $match: query
             },
             {
                 $group: {
@@ -482,7 +487,7 @@ export {
     logoutUser,
     getUsers,
     getCurrentUser,
-    getBatchesUndergivenManager,
+    getBatches,
     changePasswordByCode,
     changeCurrentUserPassword,
     deleteUser
