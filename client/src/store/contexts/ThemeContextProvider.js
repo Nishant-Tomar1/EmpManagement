@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 const themeContext = createContext()
 
 function ThemeContextProvider({children}){
-    const [theme, setTheme] = useState(localStorage.getItem("themeMode") ? localStorage.getItem("themeMode") : "dark");
+    const [theme, setTheme] = useState(localStorage.getItem("themeMode") ? localStorage.getItem("themeMode") : "light");
 
     const toggleTheme = () => { 
         setTheme( (theme === "dark") ? "light" : "dark");

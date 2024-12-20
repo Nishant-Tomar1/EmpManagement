@@ -57,7 +57,7 @@ function ForgotPassword() {
         } catch (error) {
             setLoading(false)
             console.log(error);           
-            alertCtx.setToast("error", extractErrorMessage(error.response.data))
+            alertCtx.setToast("error", extractErrorMessage(error?.response?.data))
         }
     }
 

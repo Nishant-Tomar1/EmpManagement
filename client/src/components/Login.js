@@ -63,7 +63,7 @@ function Login() {
           </div>
 
           {/* Right Section */}
-          <div className="md:flex-1 bg-white flex flex-col justify-center items-center p-8">
+          <div className="md:flex-1 bg-white flex flex-col justify-center items-center p-4 py-6 xl:p-8">
             <div className="flex flex-col items-center w-full max-w-md">
               <div className="text-6xl font-bold mb-4"><img src={logo} alt="" className='w-20 md:w-24' /></div>
               <h2 className="text-xl md:text-xl font-bold mb-2 text-center text-gray-700">Employee Assessment</h2>

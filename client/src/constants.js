@@ -1,12 +1,12 @@
 export const Server = "http://localhost:8000/api/v1"
 
 export function extractErrorMessage(html) {
-    if (!html){
-      return "Error decoding failed"
-    }
+    // if (!html){
+    //   return "Error decoding failed"
+    // }
     const regex = /<pre>(.*?)<br>/;
     const match = html?.match(regex);
-    return match ? match[1] : "Something went wrong. Please try again";
+    return match ? match[1] : "Something went wrong. Check your internet connection and try again";
   }
 
 export const selfQuestions = [
