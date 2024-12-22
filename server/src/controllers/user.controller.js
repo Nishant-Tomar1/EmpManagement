@@ -293,6 +293,7 @@ const getUsers = asyncHandler(
         if(role) query.role = String(role).toLowerCase();
         if(designation) query.designation = designation;
         if(email) query.email = email.toLowerCase();
+        // console.log(query);
 
         const users = await User.aggregate([
             {
@@ -342,6 +343,8 @@ const getUsers = asyncHandler(
                 }
             }
         ])
+        // console.log(users);
+        
 
         if (users.length === 0){
             throw new ApiError(400, "No users with given credentials exist")
@@ -392,16 +395,15 @@ const getBatches = asyncHandler(
         const {all} = req.query;
         let query = {};
 
-        if (!all){
+        if (all === "false"){
             query.managerId = new mongoose.Types.ObjectId(req.user._id)
         }
 
-        if (req.user.role !== "admin"){
-            throw new ApiError(401, "Not authorized. Login as a manager(admin) first.")
+        if ((req.user.role !== "admin") && (req.user.role !== "super-admin")){
+            throw new ApiError(401, "Not authorized. Login as a manager or admin first.")
         }
 
-        // console.log(query);
-        
+        // console.log(query);        
         const batches = await User.aggregate([
             {
                 $match: query
@@ -415,10 +417,12 @@ const getBatches = asyncHandler(
             {
                 $project: {
                     _id: 0,
-                    batches: 1
+                    batches: {$sortArray: { input: "$batches", sortBy: -1 } }
                 }
             }
         ])
+        // console.log(batches);
+        
 
         if(!batches.length){
             throw new ApiError(404, "No batches found under this manager")

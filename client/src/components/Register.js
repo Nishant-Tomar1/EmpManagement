@@ -6,6 +6,7 @@ import { useAlert } from '../store/contexts/AlertContextProvider'
 import { useNavigate } from 'react-router-dom'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { IoIosArrowBack } from 'react-icons/io'
+import { useLogin } from '../store/contexts/LoginContextProvider.js'
 
 function Register() {
   const [loading, setLoading] = useState(false)
@@ -25,10 +26,11 @@ function Register() {
 
   const alertCtx = useAlert();
   const navigate = useNavigate();
+  const loginCtx = useLogin();
 
   const fetchAdmin = async () => {
     try {
-      const res = await axios.get(`${Server}/users/getusers?role=admin`);
+      const res = await axios.get(`${Server}/users/getusers?role=${loginCtx.role === "admin" ? "admin" : "super-admin"}`);
       if (res?.data?.statusCode === 200){
         setAdmins(res?.data?.data)
         // console.log(res?.data?.data)
@@ -142,6 +144,7 @@ function Register() {
                 </option>
                 <option value="admin">Admin</option>
                 <option value="user">User</option>
+                {loginCtx.role === "super-admin" && <option value="super-admin">Super-Admin</option>}
             </select>
         </div> 
         <div className="mb-3">

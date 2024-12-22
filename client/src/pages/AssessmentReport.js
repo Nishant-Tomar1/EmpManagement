@@ -121,10 +121,14 @@ function AssessmentReport() {
 
       const element = document.getElementById('graphs');
       if (element) {
-        const canvas = await html2canvas(element);
+        const canvas = await html2canvas(element,{
+          width: 800,
+          height: 1300,
+          scale: 1 // Prevent scaling for desktop resolution
+      });
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 190;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const imgHeight = (1.55) * imgWidth;
     
         const page = pdf.addPage();
         page.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight,"",'MEDIUM' );
@@ -147,7 +151,7 @@ function AssessmentReport() {
       <div className='flex text-start cursor-pointer text-xl items-center font-bold p-2' onClick={()=>{navigate("/")}}><IoIosArrowBack/> Back</div>
       {!loading ? 
                 <div className='flex flex-col justify-center items-center overflow-auto'>
-                { (user?.managerId === loginCtx.userId ) ?
+                { ((user?.managerId === loginCtx.userId)|| (loginCtx.role === "super-admin")) ?
                 <>  
                     <div className='font-bold text-2xl'>Name : {user?.name}</div>
                     <div className='mb-2 font-medium'>Designation : {user?.designation}</div>

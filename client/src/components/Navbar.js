@@ -34,8 +34,9 @@ export default function Navbar() {
             }
         } catch (error) {
             setLoading(false);
+            loginCtx.logout();
             navigate("/auth")
-            alertCtx.setToast("error",extractErrorMessage(error?.response?.data))
+            console.log(extractErrorMessage(error?.response?.data));
             setLoading(false);
         }
     }
@@ -69,7 +70,7 @@ export default function Navbar() {
                   <li>
                     <Link to="/change-password" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Change Password</Link>
                   </li>
-                  {(loginCtx.role === "admin") && <li>
+                  {((loginCtx.role === "admin") || (loginCtx.role === "super-admin")) && <li>
                     <Link to="/register" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Add new User</Link>
                   </li>}
                   {(loginCtx.role==="user")&&<li>

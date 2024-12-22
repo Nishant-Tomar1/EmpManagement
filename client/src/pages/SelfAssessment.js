@@ -149,13 +149,14 @@ function SelfAssessment() {
         if (res.data.statusCode === 200) {
             const user = (res?.data?.data)[0];
             setUser(user);
-            if (user?.managerId === loginCtx?.userId){
+            if ((user?.managerId === loginCtx?.userId) || (loginCtx.role === "super-admin")){
               setVerified(true);
             }
             else if (user?._id === loginCtx?.userId ) {
               setVerified(true);
               setEditAccess(true);
             }
+            fetchdata();
         }
     setLoading(false);
     return;
@@ -275,10 +276,10 @@ function SelfAssessment() {
 
   useEffect(() => {
     verify()
-    if (verified){
-      fetchdata()
-    }
-  }, [verified]);
+    // if (verified){
+    //   fetchdata()
+    // }
+  },[]);
 
   return (
     <>

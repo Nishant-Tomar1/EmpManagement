@@ -12,7 +12,7 @@ function Dashboard() {
 
     const fetchBatches =  async()=>{
         try {
-            const res = await axios.get(`${Server}/users/get-batches`, {withCredentials :true});
+            const res = await axios.get(`${Server}/users/get-batches?all=${loginCtx.role === "super-admin"}`, {withCredentials :true});
             if (res?.data?.statusCode === 200){
                 setBatches(res.data?.data?.batches);
                 setLoading(false);
@@ -23,10 +23,12 @@ function Dashboard() {
         }
     }
 
-    useEffect(()=>{
-        if (loginCtx.role === "admin"){
-            setLoading(true);
-            fetchBatches();
+    useEffect(() => {
+        if ((loginCtx.role === "admin") || (loginCtx.role === "super-admin")){
+            if (!batches.length){
+                setLoading(true);
+                fetchBatches();
+            }
         }
     },[loginCtx.role])
 
@@ -38,7 +40,7 @@ function Dashboard() {
                         {`Welcome, ${loginCtx.name}`}
                     </h1>
                     {
-                loginCtx.role === "admin"  ?
+                ((loginCtx.role === "admin") || (loginCtx.role === "super-admin")) ?
                     <div className='flex items-center justify-center my-4 md:my-6 text-center w-full xl:w-4/5 2xl:w-3/4'>
                         {loading ? "Fetching Employee data..." :
                             <AdminDash batches={batches}/>

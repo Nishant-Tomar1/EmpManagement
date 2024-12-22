@@ -10,8 +10,7 @@ function Auth() {
   
   return (
     <div>
-      
-      {((location.pathname === "/register") && (loginCtx.role === "admin"))
+      {((location.pathname === "/register") && ((loginCtx.role === "admin") || (loginCtx.role === "super-admin")))
       ?
       <Register/>:
       <Login/>}

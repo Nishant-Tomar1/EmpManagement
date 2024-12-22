@@ -146,9 +146,10 @@ function EmployeeAssessment() {
         if (res.data.statusCode === 200) {
             const user = (res?.data?.data)[0];
             setUser(user);
-            if (String(user?.managerId) === loginCtx?.userId ) {    
+            if ((String(user?.managerId) === loginCtx?.userId) || (loginCtx.role === "super-admin")) {    
               setVerified(true);
             }
+            fetchdata(user?.managerId);
         }
     setLoading(false);
     return;
@@ -158,9 +159,9 @@ function EmployeeAssessment() {
     }
   };
 
-  const fetchdata = async () => {
+  const fetchdata = async (manager) => {
     try {
-      const res = await axios.get(`${Server}/assessments/get?userAssessed=${userId}&assessedBy=${loginCtx.userId}`,{withCredentials:true});
+      const res = await axios.get(`${Server}/assessments/get?userAssessed=${userId}&assessedBy=${manager}`,{withCredentials:true});
       
       if (res.data.statusCode === 200){
         setStatus(res?.data?.data[0]?.status || "");
@@ -179,6 +180,9 @@ function EmployeeAssessment() {
 
   //Use it if required
   const handleCommentChange = (category, subcategory, value)=>{ 
+    if ((loginCtx.role === "super-admin") && (user.managerId !== loginCtx.userId)){
+      return alertCtx.setToast("error","Only the manager of this user can make changes.")
+    }
     setScore(prev => ({
       ...prev,
       [category]: {
@@ -192,6 +196,9 @@ function EmployeeAssessment() {
   }
 
   const handleRatingChange = (category, subcategory, value)=>{ 
+    if ((loginCtx.role === "super-admin") && (user.managerId !== loginCtx.userId)){
+      return alertCtx.setToast("error","Only the manager of this user can make changes.")
+    }
        
     setScore(prev => ({
       ...prev,
@@ -207,6 +214,10 @@ function EmployeeAssessment() {
 
 
   const handleSave = async(status, submit = false) => {
+    if ((loginCtx.role === "super-admin") && (user.managerId !== loginCtx.userId)){
+      return
+    }
+
     // console.log(status);
     if (status === "finished" && submit){
       for (let cat in score){
@@ -281,10 +292,10 @@ function EmployeeAssessment() {
 
   useEffect(() => {
     verify()
-    if (verified){
-      fetchdata()
-    }
-  }, [verified]);
+    // if (verified){
+    //   fetchdata()
+    // }
+  }, []);
 
   return (
     <>

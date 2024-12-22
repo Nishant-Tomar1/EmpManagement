@@ -25,7 +25,7 @@ const userSchema = new Schema({
     role : {
         type: String,
         required :[true, "User role is required"],
-        enum : ['user', 'admin'],
+        enum : ['user', 'admin','super-admin'],
     },
     managerId : {
         type : Schema.Types.ObjectId,
@@ -61,7 +61,7 @@ userSchema.methods.generateToken = function(){
         {
             _id : this._id,  
             email : this.email, 
-            name : this.username,
+            name : this.name,
         },
         process.env.TOKEN_SECRET,
         {

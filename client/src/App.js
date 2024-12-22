@@ -13,7 +13,6 @@ import ForgotPassword from "./components/ForgotPassword.js";
 import SelfAssessment from "./pages/SelfAssessment.js";
 import ChangePassword from "./pages/ChangePassword.js";
 import EmployeeAssessment from "./pages/EmployeeAssessment.js";
-import EmpSelf from "./pages/EmpSelf.js";
 import AssessmentReport from "./pages/AssessmentReport.js";
 
 function App() {
@@ -62,7 +61,6 @@ function App() {
           <Route path="/forgotpassword" element={<ForgotPassword/>} />
           <Route path="/self-assessment/:userId" element={<SelfAssessment/>}/>
           <Route path="/emp-assessment/:userId" element={<EmployeeAssessment/>}/>
-          <Route path="/emp-self" element={<EmpSelf/>}/>
           <Route path="/report/:userId" element={<AssessmentReport/>}/>
           <Route path="/change-password" element={<ChangePassword/>} />
           <Route path="*" element={<NotFound/>}/>

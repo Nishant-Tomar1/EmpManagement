@@ -16,7 +16,6 @@ function EmployeeReport({batches}) {
     const [selected, setSelected] = useState([]);
     const [fetching, setFetching] = useState([])
     const [userData, setUserData] = useState([]);
-    
     const alertCtx = useAlert();
     const loginCtx = useLogin();
     const navigate = useNavigate();
@@ -44,7 +43,7 @@ function EmployeeReport({batches}) {
     const fetchUserData = async(key, batch)=>{
         handleLoader(key);
         try {
-            const res = await axios.get(`${Server}/users/getusers?managerId=${loginCtx.userId}&batch=${batch}`);
+            const res = await axios.get(`${Server}/users/getusers?managerId=${(loginCtx.role === "super-admin" ?  "" : loginCtx.userId)}&batch=${batch}`);
             if (res?.data?.statusCode === 200){
                 const newData = res.data.data;
                 // console.log(newData);
@@ -57,7 +56,7 @@ function EmployeeReport({batches}) {
             
         } catch (error) {
             handleLoader(key);
-            alertCtx.setToast("error",extractErrorMessage(error?.response?.data));
+            console.log(extractErrorMessage(error?.response?.data));
             // alertCtx.setToast("error","Something went wrong while fetching data")
         }
     }
