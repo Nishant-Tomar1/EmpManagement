@@ -73,9 +73,9 @@ export default function Navbar() {
                   {((loginCtx.role === "admin") || (loginCtx.role === "super-admin")) && <li>
                     <Link to="/register" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Add new User</Link>
                   </li>}
-                  {(loginCtx.role==="user")&&<li>
+                  <li>
                     <Link to={`/self-assessment/${loginCtx.userId}`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-[#333333] dark:hover:text-white">Self-assessment </Link>
-                  </li>}
+                  </li>
                 </ul>
                 <div className="py-2 bg-red-600 rounded-b-md hover:bg-red-700">
                   <button onClick={()=>{alertCtx.showConfirm("Do you really want to logout of your account?",handlelogout);setOpen(false);}} className="block px-4 text-md w-full font-semibold text-white ">{!loading ? "Sign Out" : "Loading.."}</button>
