@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, useNavigate, Routes } from "react-router-dom"
+import { Route, useNavigate, Routes, useLocation } from "react-router-dom"
 import Layout from "./layout/Layout.js";
 import HomePage from "./pages/HomePage.js";
 import Auth from "./pages/Auth.js";
@@ -14,15 +14,18 @@ import SelfAssessment from "./pages/SelfAssessment.js";
 import ChangePassword from "./pages/ChangePassword.js";
 import EmployeeAssessment from "./pages/EmployeeAssessment.js";
 import AssessmentReport from "./pages/AssessmentReport.js";
+import CreatePassword from "./pages/CreatePassword.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [cookie] = useCookies()
   const navigate = useNavigate();
   const loginCtx = useLogin();
+  const location = useLocation();
 
   const verifyToken = async () => {
-    if (!cookie.token) {
+    
+    if ((!cookie.token) && (location.pathname.split("/")[1] != "create-password")) {
       setLoading(false);
       navigate("/auth");
       return;
@@ -41,7 +44,9 @@ function App() {
       setLoading(false);
       // console.log(error);
       console.log(extractErrorMessage(error?.response?.data)); 
-      navigate("/auth") 
+      if ((location.pathname.split("/")[1] != "create-password")){
+        navigate("/auth") 
+      }
     }
   }
 
@@ -63,6 +68,7 @@ function App() {
           <Route path="/emp-assessment/:userId" element={<EmployeeAssessment/>}/>
           <Route path="/report/:userId" element={<AssessmentReport/>}/>
           <Route path="/change-password" element={<ChangePassword/>} />
+          <Route path="/create-password/:userId" element={<CreatePassword/>} />
           <Route path="*" element={<NotFound/>}/>
       </Routes>
       :

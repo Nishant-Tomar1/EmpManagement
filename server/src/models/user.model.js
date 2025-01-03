@@ -38,6 +38,10 @@ const userSchema = new Schema({
     },
     token : {
         type : String,
+    },
+    passwordCreated : {
+        type : Boolean,
+        default : false,
     }
 },{timestamps:true});
 

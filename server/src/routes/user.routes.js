@@ -8,6 +8,7 @@ import {
     verifytoken,
     verifyEmail,
     changePasswordByCode,
+    createPassword,
     changeCurrentUserPassword,
     getUsers,
     getCurrentUser,
@@ -30,6 +31,8 @@ router.route("/verify-token").get(verifytoken);
 router.route("/verifyemail").post(verifyEmail);
 
 router.route("/sendemail").post(sendEmailHandler);
+
+router.route("/create-password").post(createPassword);
 
 router.route("/change-password-by-code").post( changePasswordByCode );
 //secured routes

@@ -281,6 +281,37 @@ const changeCurrentUserPassword = asyncHandler(
     }
 )
 
+const createPassword = asyncHandler(
+    async (req, res) => {
+        const {userId, password} = req.body;
+
+        if(!userId){
+            throw new ApiError(400, "Invalid request!")
+        }
+
+        if (!password){
+            throw new ApiError(400, "Password is required")
+        }
+
+        const user = await User.findById(userId);
+        
+        if(!user) throw new ApiError(404, "User with this Id does not exist")
+
+        if (user.passwordCreated === true) throw new ApiError(400,"Password already Created.")
+
+        user.password = password;
+        user.passwordCreated = true;
+
+        await user.save({validateBeforeSave:false});
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200,{},"Password created successfully" )
+        )
+    }
+)
+
 const getUsers = asyncHandler(
     async(req, res) => {
         const { batch, managerId, userId, role, designation, email} = req.query;
@@ -417,7 +448,7 @@ const getBatches = asyncHandler(
             {
                 $project: {
                     _id: 0,
-                    batches: {$sortArray: { input: "$batches", sortBy: -1 } }
+                    batches: 1
                 }
             }
         ])
@@ -493,6 +524,7 @@ export {
     getCurrentUser,
     getBatches,
     changePasswordByCode,
+    createPassword,
     changeCurrentUserPassword,
     deleteUser
 }
