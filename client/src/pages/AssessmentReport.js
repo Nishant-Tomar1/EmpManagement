@@ -202,7 +202,7 @@ function AssessmentReport() {
 
                     {/* bar graphs */}
                     <div id="graphs" className='w-full p-2 lg:w-2/3 2xl:w-1/2'>
-                        <img src={image} className='w-100 mb-8' alt="" />
+                        {/* <img src={image} className='w-100 mb-8' alt="" /> */}
                       {(user?.selfAssessment?.length > 0) &&
                           <>
                                 <div className='z-10 mb-4 text-center w-full font-semibold text-lg md:text-2xl text-gray-800 dark:text-gray-400'>According to {user?.name} : <span className={`text-${getRank(user?.selfAssessment[0].score)[1]}`}> {getRank(user?.selfAssessment[0]?.score)[0] || ""} </span></div>
@@ -210,6 +210,7 @@ function AssessmentReport() {
                                 
                           </>
                         }
+                        <><img src={image} alt="" className='w-full p-2'/></>
                       {
                       (user?.managerAssessment?.length > 0 ) &&
                         <>

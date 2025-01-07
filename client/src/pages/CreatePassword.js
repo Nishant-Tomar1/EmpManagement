@@ -66,6 +66,7 @@ function CreatePassword() {
 
     return (
         <>
+        <title>Update-Password</title>
         { !loading ?  
         <>
          <div className='flex cursor-pointer text-2xl items-center font-bold p-2' onClick={()=>{navigate("/auth")}}><IoIosArrowBack/> Back</div>
