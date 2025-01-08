@@ -20,7 +20,6 @@ function AssessmentReport() {
   const alertCtx = useAlert()
   const loginCtx = useLogin()
   const navigate = useNavigate()
-  const chartRef = useRef(null);
 
   const getScore = (category, score)=>{
     let sum = 0;
@@ -28,6 +27,16 @@ function AssessmentReport() {
       sum += score[category][data]?.rating || 0;
     }
     return sum;
+  }
+
+  const getAverageScore = (score)=>{
+    let sum =0;
+    let cnt=0;
+    for (let category in score){
+      cnt++;
+      sum+=getScore(category,score);
+    }
+    return sum/cnt;
   }
 
   const getRank = (score) => {
@@ -53,6 +62,7 @@ function AssessmentReport() {
       const res = await axios.get(`${Server}/users/getusers?userId=${userId}`,{withCredentials:true});
       if (res.data.statusCode === 200){
         setUser(res.data.data[0]);
+        // console.log(res.data.data[0]);
       }
       setLoading(false);
     } catch (error) {
@@ -120,18 +130,33 @@ function AssessmentReport() {
       });
 
       const element = document.getElementById('graphs');
-      if (element) {
+      if (element && (user?.selfAssessment.length || user?.managerAssessment?.length)) {
         const canvas = await html2canvas(element,{
-          width: 800,
+          // width: 800,
           height: 1300,
-          scale: 1 // Prevent scaling for desktop resolution
+          // scale: 1 // Prevent scaling for desktop resolution
       });
         const imgData = canvas.toDataURL('image/png');
         const imgWidth = 190;
         const imgHeight = (1.55) * imgWidth;
     
         const page = pdf.addPage();
-        page.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight,"",'MEDIUM' );
+        page.addImage(imgData, 'PNG', 10, 6, imgWidth, imgHeight,"",'MEDIUM' );
+      }
+
+      const element2 = document.getElementById('final-table');
+      if (element2 && (user?.selfAssessment.length || user?.managerAssessment?.length)) {
+        const canvas2 = await html2canvas(element2,{
+          // width: 800,
+          // height: 1300,
+          // scale: 1 // Prevent scaling for desktop resolution
+      });
+        const img2Data = canvas2.toDataURL('image2/png');
+        const img2Width = 190;
+        const img2Height = element2.offsetHeight*0.2;
+    
+        const page = pdf.addPage();
+        page.addImage(img2Data, 'PNG', 10, 10, img2Width, img2Height,"",'MEDIUM' );
       }
       // const pdfDataUri = pdf.output('datauristring');
       // const newTab = window.open();
@@ -220,6 +245,58 @@ function AssessmentReport() {
                         
                         </>
                       }
+                    </div>
+
+
+                    {/* final scores table */}
+                    <div id="final-table" className='flex flex-col w-full xl:w-[65%] 2xl:w-[50%] px-2 overflow-auto items-center justify-center'>
+                      <label className='font-semibold text-xl text-gray-700' htmlFor="">ASSESSMENT SCORE</label>
+                      <table className="w-full my-4 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                          <thead className="text-xs text-center text-gray-700 uppercase bg-indigo-200 dark:bg-[#353535] dark:text-gray-100">
+                              <tr>
+                                  <th scope="col" className="px-6 py-3 font-bold">
+                                      COMPETENCY
+                                  </th>
+                                  <th scope="col" className="px-6 py-3 font-bold">
+                                      SCORE BY SELF ({user?.name})
+                                  </th>
+                                  <th scope="col" className="px-6 py-3 font-bold">
+                                      SCORE BY REPORTING MANAGER
+                                  </th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {
+                                  selfQuestions?.map((data, index)=>(
+                                      <tr key={index} className="bg-white text-center border-b dark:bg-[#212121] dark:border-gray-700">
+                                  <th scope="row" className="px-6 py-3 text-md font-bold text-gray-900 dark:text-white">
+                                      {data?.category.toUpperCase()}
+                                  </th>
+                                  <th scope="row" className="px-6 py-3 font-semibold text-gray-900 dark:text-white">
+                                      {user?.selfAssessment.length ? (getScore(data.category , user.selfAssessment[0]?.score) || "Yet to give score") : "Yet to give score"}
+                                  </th>
+                                  <td className="px-6 py-3 font-semibold text-gray-900 dark:text-white">
+                                  {user?.managerAssessment.length ? (getScore(data.category , user.managerAssessment[0]?.score)|| "Yet to receive score" ): "Yet to receive score"}
+                                  </td>
+                              </tr>
+                                  ))
+                              }
+                              
+                          </tbody>
+                          <thead className="text-xs text-gray-700 dark:text-gray-200 uppercase bg-cyan-200 dark:bg-teal-500 text-center ">
+                              <tr>
+                                  <th scope="col" className="font-bold px-6 py-3">
+                                      Average Score
+                                  </th>
+                                  <th scope="col" className="font-bold px-6 py-3">
+                                  {(user?.selfAssessment?.length ? getAverageScore(user?.selfAssessment[0]?.score).toFixed(2) : "NA")}
+                                  </th>
+                                  <th scope="col" className="font-bold px-6 py-3">
+                                  {(user?.managerAssessment?.length ? getAverageScore(user?.managerAssessment[0]?.score).toFixed(2) :  "NA")}
+                                  </th>
+                              </tr>
+                          </thead>
+                      </table>
                     </div>
                 </>
               :
