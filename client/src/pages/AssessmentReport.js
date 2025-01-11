@@ -5,10 +5,9 @@ import 'jspdf-autotable';
 import {useAlert} from "../store/contexts/AlertContextProvider"
 import { useLogin } from '../store/contexts/LoginContextProvider';
 import {extractErrorMessage, selfQuestions, Server} from '../constants'
-import logoPath from '../assets/logos/logo2.png';
+import logoPath from '../assets/logos/logo.png';
 import axios from 'axios'
 import { IoIosArrowBack } from 'react-icons/io';
-import image from "../assets/utils/image.png";
 import BarGraph from '../components/BarGraph';
 import html2canvas from 'html2canvas'
 
@@ -85,7 +84,7 @@ function AssessmentReport() {
               const managerData = user?.managerAssessment?.length ? [user?.managerAssessment[0]?.score[competency][item.subcategory]?.rating || "", user?.managerAssessment[0]?.score[competency][item.subcategory]?.comment || " "] : ["",""];
           
           tableRows.push([
-            index === 0 ? competency?.toUpperCase() : '',    
+            index === 0 ? (competency?.toUpperCase()=== "RISK") ? "RISK-TAKING" : (competency?.toUpperCase() === "CONNECT" ? "PEOPLE-CONNECT":competency?.toUpperCase()) : '',    
             item.question,  
             userData? userData[0] : "",     
             managerData ?  managerData[0] : ""  
@@ -105,13 +104,13 @@ function AssessmentReport() {
       const pdf = new jsPDF('p', 'mm', 'a4');
       const startY = 30;
     
-      pdf.addImage(logoPath, 'PNG', 10, 10, 40, 17);
+      pdf.addImage(logoPath, 'PNG', 20, 10, 10, 10,"","FAST");
     
       const userName = user?.name || 'User';
       const reportTitle = userName + " - Competency Report";
       pdf.setFontSize(16);
       pdf.setFont('helvetica', 'bold');
-      pdf.text(reportTitle, 60, 20);
+      pdf.text(reportTitle, 50, 20);
     
       pdf.autoTable({
         head: [tableColumns],
@@ -123,7 +122,7 @@ function AssessmentReport() {
           0: { cellWidth: 40, halign: 'left' },
           1: { cellWidth: 50, halign: 'left' },
           2: { cellWidth: 55, halign: 'center' },
-          3: { cellWidth: 45, halign: 'center' },
+          3: { cellWidth: 40, halign: 'center' },
         },
         headStyles: { fillColor: [22, 160, 133], fontSize: 11 },
         alternateRowStyles: { fillColor: [240, 240, 240] },
@@ -156,7 +155,7 @@ function AssessmentReport() {
         const img2Height = element2.offsetHeight*0.2;
     
         const page = pdf.addPage();
-        page.addImage(img2Data, 'PNG', 10, 10, img2Width, img2Height,"",'MEDIUM' );
+        page.addImage(img2Data, 'PNG', 10, 10, img2Width, img2Height,"MEDIUM" );
       }
       // const pdfDataUri = pdf.output('datauristring');
       // const newTab = window.open();
@@ -235,7 +234,69 @@ function AssessmentReport() {
                                 
                           </>
                         }
-                        <><img src={image} alt="" className='w-full p-2'/></>
+                        <>
+                        <div className='flex w-full justify-center items-center my-4'>
+                        <table className="w-[65%] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-black ">
+                          <thead className="text-xs text-center text-gray-800 uppercase bg-white">
+                              <tr>
+                                  <th scope="col" className="px-6 py-1.5 font-extrabold border-r border-black ">
+                                      Rating Range
+                                  </th>
+                                  <th scope="col" className="px-6 py-1.5 font-extrabold">
+                                      Rating Description
+                                  </th>
+                              </tr>
+                          </thead>
+                          <tbody>             
+                              <tr className="text-center border bg-gray-300 border-black ">
+                                  <th scope="row" className="px-6 py-1.5 text-md font-bold text-gray-900 border-r border-black ">
+                                      0-4
+                                  </th>
+                                  <th scope="row" className="px-6 py-1.5 font-semibold text-gray-900">
+                                      Novice
+                                  </th>
+                              </tr>
+
+                              <tr className="bg-orange-300 text-center border border-black ">
+                                  <th scope="row" className="px-6 py-1.5 text-md font-bold text-gray-900 border-r border-black ">
+                                      5-8
+                                  </th>
+                                  <th scope="row" className="px-6 py-1.5 font-semibold text-gray-900">
+                                      Boomer
+                                  </th>
+                              </tr>
+
+                              <tr className="bg-green-300 text-center border border-black ">
+                                  <th scope="row" className="px-6 py-1.5 text-md font-bold text-gray-900 border-r border-black ">
+                                      9-13
+                                  </th>
+                                  <th scope="row" className="px-6 py-1.5 font-semibold text-gray-900">
+                                      Compliant
+                                  </th>
+                              </tr>
+
+                            <tr className="bg-blue-300 text-center border border-black ">
+                                <th scope="row" className="px-6 py-1.5 text-md font-bold text-gray-900 border-r border-black ">
+                                    14-17
+                                </th>
+                                <th scope="row" className="px-6 py-1.5 font-semibold text-gray-900">
+                                    Star
+                                </th>
+                            </tr>
+
+                          <tr className="bg-yellow-200 text-center border border-black ">
+                              <th scope="row" className="px-6 py-1.5 text-md font-bold text-gray-900 border-r border-black ">
+                                  18-20
+                              </th>
+                              <th scope="row" className="px-6 py-1.5 font-semibold text-gray-900">
+                                  Role-Model / Zenith
+                              </th>
+                          </tr>             
+                          </tbody>
+                         
+                      </table>
+                      </div>
+                        </>
                       {
                       (user?.managerAssessment?.length > 0 ) &&
                         <>
@@ -249,9 +310,9 @@ function AssessmentReport() {
 
 
                     {/* final scores table */}
-                    <div id="final-table" className='flex flex-col w-full xl:w-[65%] 2xl:w-[50%] px-2 overflow-auto items-center justify-center'>
-                      <label className='font-semibold text-xl text-gray-700' htmlFor="">ASSESSMENT SCORE</label>
-                      <table className="w-full my-4 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <div id="final-table" className='flex flex-col mt-6 w-full xl:w-[65%] 2xl:w-[50%] px-2 overflow-auto items-center justify-center'>
+                      <label className='font-semibold text-xl text-gray-700 dark:text-gray-300' htmlFor="">ASSESSMENT SCORE</label>
+                      <table className="border border-gray-500 dark:border-gray-300 w-full my-4 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                           <thead className="text-xs text-center text-gray-700 uppercase bg-indigo-200 dark:bg-[#353535] dark:text-gray-100">
                               <tr>
                                   <th scope="col" className="px-6 py-3 font-bold">
@@ -270,13 +331,13 @@ function AssessmentReport() {
                                   selfQuestions?.map((data, index)=>(
                                       <tr key={index} className="bg-white text-center border-b dark:bg-[#212121] dark:border-gray-700">
                                   <th scope="row" className="px-6 py-3 text-md font-bold text-gray-900 dark:text-white">
-                                      {data?.category.toUpperCase()}
+                                      {(data?.category.toUpperCase() === "RISK") ? "RISK-TAKING" : (data?.category.toUpperCase() === "CONNECT" ? "PEOPLE-CONNECT":data?.category.toUpperCase())}
                                   </th>
                                   <th scope="row" className="px-6 py-3 font-semibold text-gray-900 dark:text-white">
-                                      {user?.selfAssessment.length ? (getScore(data.category , user.selfAssessment[0]?.score) || "Yet to give score") : "Yet to give score"}
+                                      {user?.selfAssessment?.length ? (getScore(data.category , user.selfAssessment[0]?.score) || "Yet to give score") : "Yet to give score"}
                                   </th>
                                   <td className="px-6 py-3 font-semibold text-gray-900 dark:text-white">
-                                  {user?.managerAssessment.length ? (getScore(data.category , user.managerAssessment[0]?.score)|| "Yet to receive score" ): "Yet to receive score"}
+                                      {user?.managerAssessment?.length ? (getScore(data.category , user.managerAssessment[0]?.score)|| "Yet to receive score" ): "Yet to receive score"}
                                   </td>
                               </tr>
                                   ))
